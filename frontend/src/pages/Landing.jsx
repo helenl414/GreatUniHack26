@@ -1,46 +1,60 @@
 import { useProfile } from '../lib/store';
 import { sampleProfile } from '../lib/sample';
 import { go } from '../lib/useHashRoute';
+import { gbp } from '../lib/format';
 import { IconArrow, IconPlan, IconReport, IconShield, IconSim, SothisMark } from '../components/Icons';
 
 // Signature moment: lumpy monthly income, and the one calm line Sothis draws through it.
-function HeroCard() {
-  const bars = [52, 96, 124, 132, 78, 40, 62, 110];
+// With a plan saved, the card shows the person's own numbers; otherwise a labelled example.
+const EXAMPLE = { totals: [520, 960, 1240, 1320, 780, 400, 620, 1100], line: 900, weekly: 212, low: 640, buffer: '2.4 of 3 mo' };
+
+function HeroCard({ plan }) {
+  const real = Boolean(plan);
+  const totals = real ? plan.totals.slice(-8) : EXAMPLE.totals;
+  const line = real ? plan.steadyPay : EXAMPLE.line;
+  const max = Math.max(...totals, line, 1);
   const base = 150;
+  const h = (v) => Math.max(4, (v / max) * 132);
+  const gap = 400 / totals.length;
+  const lineY = base - h(line);
+  const Wrapper = real ? 'a' : 'div';
+  const props = real
+    ? { href: '#/plan', 'aria-label': `Your plan: ${gbp(plan.safeWeekly)} safe to spend each week. Open the planner.` }
+    : { 'aria-hidden': true };
   return (
-    <div className="hero-card" aria-hidden="true">
+    <Wrapper className={`hero-card${real ? ' is-real' : ''}`} {...props}>
       <div className="hero-card-top">
-        <span className="hc-label">Safe to spend this week</span>
-        <span className="hc-tag">Example</span>
+        <span className="hc-label">Safe to spend each week</span>
+        <span className="hc-tag">{real ? 'Your plan' : 'Example'}</span>
       </div>
-      <div className="hc-value">£212</div>
-      <svg className="hc-chart" viewBox="0 0 400 160" preserveAspectRatio="none">
-        {bars.map((h, i) => (
+      <div className="hc-value">{gbp(real ? plan.safeWeekly : EXAMPLE.weekly)}</div>
+      <svg className="hc-chart" viewBox="0 0 400 160" preserveAspectRatio="none" aria-hidden="true">
+        {totals.map((v, i) => (
           <rect
             key={i}
             className="hc-bar"
-            x={8 + i * 49}
-            y={base - h}
-            width="34"
-            height={h}
+            x={gap * i + gap * 0.14}
+            y={base - h(v)}
+            width={gap * 0.72}
+            height={h(v)}
             rx="8"
             style={{ animationDelay: `${120 + i * 55}ms` }}
-            data-low={h < 60 || undefined}
+            data-low={v < line || undefined}
           />
         ))}
-        <path className="hc-line" d="M6 96 C 90 90, 170 102, 250 94 S 360 92, 394 94" />
+        <path className="hc-line" d={`M4 ${lineY} L396 ${lineY}`} />
       </svg>
       <div className="hc-foot">
         <div>
           <span>Lowest month</span>
-          <strong>£640</strong>
+          <strong>{gbp(real ? plan.stats.min : EXAMPLE.low)}</strong>
         </div>
         <div>
-          <span>Buffer</span>
-          <strong>2.4 of 3 mo</strong>
+          <span>Buffer saved</span>
+          <strong>{real ? `${Math.round(plan.bufferProgress * 100)}% of ${gbp(plan.bufferTarget)}` : EXAMPLE.buffer}</strong>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 }
 
@@ -84,7 +98,7 @@ const STEPS = [
 const VALUES = ['Inclusive', 'Robust', 'Curious', 'Sustainable', 'Ambitious'];
 
 export default function Landing() {
-  const { profile, setProfile } = useProfile();
+  const { profile, setProfile, plan } = useProfile();
 
   const trySample = () => {
     setProfile(sampleProfile());
@@ -108,15 +122,23 @@ export default function Landing() {
               quiet months, and prove your income.
             </p>
             <div className="row stage-cta">
-              <a className="btn btn-on-dark" href="#start">
-                Get started <IconArrow />
-              </a>
-              <button className="btn btn-outline-on-dark" onClick={trySample}>
-                Try with sample data
-              </button>
+              {plan ? (
+                <a className="btn btn-on-dark" href="#/plan">
+                  Open my plan <IconArrow />
+                </a>
+              ) : (
+                <>
+                  <a className="btn btn-on-dark" href="#start">
+                    Get started <IconArrow />
+                  </a>
+                  <button className="btn btn-outline-on-dark" onClick={trySample}>
+                    Try with sample data
+                  </button>
+                </>
+              )}
             </div>
           </div>
-          <HeroCard />
+          <HeroCard plan={plan} />
         </div>
       </section>
 
@@ -169,12 +191,11 @@ export default function Landing() {
           <div className="start-copy">
             <IconShield width={28} height={28} />
             <h2 id="start-h">Before you start</h2>
-            <ul>
-              <li>Planning support, <strong>not regulated financial advice</strong>.</li>
-              <li>Results are estimates, only as good as the figures you enter.</li>
-              <li>Income summaries are <strong>self-reported</strong>, not verified by a bank.</li>
-              <li>Your data stays on this device.</li>
-            </ul>
+            <p className="start-lede">
+              Sothis supports planning, it isn’t regulated financial advice. Estimates are only as
+              good as what you enter, and income summaries are self-reported.
+            </p>
+            <a className="start-link" href="#/about">How to use Sothis safely <IconArrow width={16} height={16} /></a>
             <div className="row">
               <button className="btn btn-primary" onClick={() => go('plan')}>
                 {profile ? 'I understand, continue' : 'I understand, start'} <IconArrow />

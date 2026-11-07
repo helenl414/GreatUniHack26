@@ -7,12 +7,14 @@ import Landing from './pages/Landing';
 const Planner = lazy(() => import('./pages/Planner'));
 const Simulator = lazy(() => import('./pages/Simulator'));
 const Report = lazy(() => import('./pages/Report'));
+const About = lazy(() => import('./pages/About'));
 
 const TITLES = {
   home: 'Sothis — plan for income that doesn’t arrive neatly',
   plan: 'Income Smoothing Planner · Sothis',
   simulate: 'What-if Simulator · Sothis',
   report: 'Prove My Income · Sothis',
+  about: 'About & safety · Sothis',
 };
 
 export default function App() {
@@ -48,6 +50,7 @@ export default function App() {
           {route === 'plan' && <Planner />}
           {route === 'simulate' && <Simulator />}
           {route === 'report' && <Report />}
+          {route === 'about' && <About />}
         </Suspense>
       </main>
       <FooterNote />

@@ -1,0 +1,53 @@
+/* About & safety page */
+.about { padding-top: 20px; }
+.about > section + section { margin-top: clamp(48px, 7vw, 88px); }
+
+.about-hero { padding-top: clamp(40px, 6vw, 80px); }
+.about-hero h1 { margin-top: 16px; max-width: 18ch; outline: none; font-size: clamp(2.1rem, 5vw, 3.8rem); }
+.about-lede { margin-top: 24px; font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--ink-2); max-width: 60ch; line-height: 1.6; }
+.about-name { margin-top: 20px; display: flex; gap: 10px; align-items: flex-start; color: var(--ink-3); font-size: 0.9rem; max-width: 60ch; }
+.about-name svg { flex: none; margin-top: 3px; }
+
+.about-limits {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-xl);
+  padding: clamp(28px, 5vw, 56px); box-shadow: var(--shadow);
+}
+.about-limits-head h2 { margin-top: 12px; max-width: 20ch; }
+.limit-grid { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.limit-grid li { padding: 0 24px; border-left: 1px solid var(--line); }
+.limit-grid li:first-child { padding-left: 0; border-left: 0; }
+.limit-icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--brand-100); color: var(--action); flex: none; }
+.limit-grid h3 { margin-top: 22px; font-size: 1.08rem; }
+.limit-grid p { margin-top: 8px; color: var(--ink-2); font-size: 0.94rem; line-height: 1.55; }
+@media (max-width: 960px) {
+  .limit-grid { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+  .limit-grid li:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+@media (max-width: 560px) {
+  .about-limits { border-radius: 24px; }
+  .limit-grid { grid-template-columns: 1fr; row-gap: 0; margin-top: 24px; }
+  .limit-grid li, .limit-grid li:nth-child(3) { padding: 22px 0; border-left: 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 44px 1fr; column-gap: 16px; }
+  .limit-grid li:first-child { border-top: 0; padding-top: 0; }
+  .limit-grid .limit-icon { grid-row: span 2; }
+  .limit-grid h3 { margin-top: 0; }
+  .limit-grid p { margin-top: 4px; }
+}
+
+.about-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.about-commit { display: flex; gap: 16px; align-items: flex-start; max-width: 62ch; }
+.about-commit h2 { font-size: 1.2rem; letter-spacing: -0.02em; }
+.about-commit p { margin-top: 6px; color: var(--ink-2); font-size: 0.95rem; }
+
+/* Landing start card + footer link */
+.start-lede { margin-top: 16px; color: var(--ink-2); max-width: 52ch; }
+.start-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-weight: 600; text-decoration: none; }
+.start-link:hover { text-decoration: underline; }
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-links a { color: var(--ink-2); font-weight: 600; text-decoration: none; }
+.footer-links a:hover { color: var(--ink); text-decoration: underline; }
+
+/* Hero card as a real link when it shows the user's own plan */
+a.hero-card { color: #fff; text-decoration: none; transition: transform var(--t-med) var(--ease), background var(--t-med) var(--ease); }
+a.hero-card:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.16); }
+.hero-card.is-real .hc-tag { background: rgba(255, 255, 255, 0.92); color: #3c1053; }
+.footer-note .wrap > p { flex-basis: 100%; }

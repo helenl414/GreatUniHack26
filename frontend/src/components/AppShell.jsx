@@ -50,6 +50,12 @@ export function FooterNote() {
         <span className="footer-brand">
           <SothisMark size={18} /> Sothis
         </span>
+        <nav className="footer-links" aria-label="Footer">
+          <a href="#/about">About &amp; safety</a>
+          <a href="#/plan">Planner</a>
+          <a href="#/simulate">What-if</a>
+          <a href="#/report">Prove income</a>
+        </nav>
         <p>
           Planning support, not regulated financial advice. Figures come from what you enter and
           stay on this device. Free, impartial guidance: MoneyHelper, Citizens Advice, StepChange.

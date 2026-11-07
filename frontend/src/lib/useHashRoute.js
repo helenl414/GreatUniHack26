@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export const ROUTES = ['plan', 'simulate', 'report'];
+export const ROUTES = ['plan', 'simulate', 'report', 'about'];
 
 const read = () => {
   const r = window.location.hash.replace(/^#\/?/, '');
