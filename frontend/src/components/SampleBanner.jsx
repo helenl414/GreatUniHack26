@@ -6,7 +6,7 @@ export function SampleBanner() {
   return (
     <div className="sample-banner no-print" role="status">
       <span>
-        <strong>You&rsquo;re viewing sample data.</strong> It&rsquo;s a made-up example, not a real person.
+        <span className="sample-dot" aria-hidden="true" /><strong>Sample data.</strong> A made-up example, not a real person.
       </span>
       <button
         className="btn btn-secondary btn-small"

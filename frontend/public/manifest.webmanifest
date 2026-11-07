@@ -1,13 +1,13 @@
 {
-  "name": "Steady — irregular income planner",
-  "short_name": "Steady",
+  "name": "Sothis — irregular income planner",
+  "short_name": "Sothis",
   "description": "Plan ahead, test your resilience and show your reliability when your income is irregular.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F7F6FA",
-  "theme_color": "#5B3E96",
+  "background_color": "#F7F4F0",
+  "theme_color": "#3C1053",
   "lang": "en-GB",
   "categories": ["finance", "education", "productivity"],
   "icons": [

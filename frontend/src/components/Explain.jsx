@@ -59,11 +59,11 @@ export function Explain({ kind, figures, title = 'What this means for you' }) {
           <span className="explain-badge">
             <IconSpark width={16} height={16} /> {usingRealAI ? 'AI explanation' : 'Plain-English explanation'}
           </span>
-          <h2 style={{ fontSize: '1.25rem', marginTop: 4 }}>{title}</h2>
+          <h2 className="explain-title">{title}</h2>
         </div>
         {state.status === 'idle' && (
           <button className="btn btn-primary" onClick={run}>
-            <IconSpark width={18} height={18} /> Explain my results
+            <IconSpark width={18} height={18} /> Explain it to me
           </button>
         )}
         {state.status === 'done' && (
@@ -79,9 +79,8 @@ export function Explain({ kind, figures, title = 'What this means for you' }) {
       </div>
 
       {state.status === 'idle' && (
-        <p className="muted small" style={{ marginTop: 10 }}>
-          Get what the numbers mean and three practical next steps, in plain language. Every figure
-          is calculated by the app first. The explanation only describes them, so the numbers stay accurate.
+        <p className="muted small explain-idle">
+          What the numbers mean, plus three next steps. The maths is done first; this only puts it into words.
         </p>
       )}
 
@@ -109,8 +108,8 @@ export function Explain({ kind, figures, title = 'What this means for you' }) {
           <ol>{state.steps.slice(0, 3).map((s, i) => <li key={i}>{s}</li>)}</ol>
           <p className="hint" style={{ marginTop: 18 }}>
             {state.source === 'ai'
-              ? 'Written by AI from the figures above. It explains, it does not calculate. This is guidance, not financial advice.'
-              : 'Written from the figures above using built-in templates (AI service not connected). This is guidance, not financial advice.'}
+              ? 'Written by AI from the figures above. It explains, it doesn’t calculate. Guidance, not financial advice.'
+              : 'Written from the figures above with built-in templates. Guidance, not financial advice.'}
           </p>
         </div>
       )}

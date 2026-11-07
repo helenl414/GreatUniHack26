@@ -12,21 +12,28 @@ import { GLOSSARY, Term } from '../components/Term';
 const HORIZON = 26;
 
 function Outcome({ kind, title, result, horizon }) {
+  const safe = !result.runOutWeek;
   return (
-    <div className={`outcome ${kind}`}>
-      <h3>{title}</h3>
-      <p className="verdict">
-        {result.runOutWeek
-          ? <>Money runs out in week {result.runOutWeek}<span className="muted" style={{ fontWeight: 500, fontSize: '1rem' }}> · {dateLabel(result.runOutDate)}</span></>
-          : <>Stays above zero for all {horizon} weeks</>}
+    <article className={`sim-outcome ${kind}`}>
+      <header className="sim-outcome-head">
+        <span className="sim-dot" aria-hidden="true" />
+        <h3>{title}</h3>
+      </header>
+      <p className="sim-verdict">
+        {safe ? (
+          <>Lasts all <span className="num">{horizon}</span> weeks</>
+        ) : (
+          <>Runs out in week <span className="num">{result.runOutWeek}</span></>
+        )}
       </p>
-      <dl>
-        <dt>Starting balance</dt><dd>{gbp(result.startBalance)}</dd>
-        <dt>Lowest point</dt><dd>{gbp(result.lowest)}</dd>
-        <dt><Term def={GLOSSARY.shortfall}>Biggest shortfall</Term></dt><dd>{result.shortfall ? gbp(result.shortfall) : 'None'}</dd>
-        <dt>Bill payments you couldn&rsquo;t cover</dt><dd>{result.billsHit.length}</dd>
+      <p className="sim-verdict-sub">{safe ? 'Your balance stays above zero.' : `Around ${dateLabel(result.runOutDate)}`}</p>
+      <dl className="sim-stats">
+        <div><dt>Starts at</dt><dd>{gbp(result.startBalance)}</dd></div>
+        <div><dt>Lowest point</dt><dd>{gbp(result.lowest)}</dd></div>
+        <div><dt><Term def={GLOSSARY.shortfall}>Shortfall</Term></dt><dd>{result.shortfall ? gbp(result.shortfall) : 'None'}</dd></div>
+        <div><dt>Bills missed</dt><dd>{result.billsHit.length}</dd></div>
       </dl>
-    </div>
+    </article>
   );
 }
 
@@ -75,70 +82,112 @@ export default function Simulator() {
     with: { runOutWeek: b.runOutWeek, runOutDate: b.runOutDate ? dateLabel(b.runOutDate) : null, shortfall: b.shortfall, billsHit: [...new Set(b.billsHit.map((x) => x.name))] },
   };
 
+  const sourceOptions = [
+    ...profile.sources.map((s) => ({ id: s.id, name: s.name })),
+    ...(profile.sources.length > 1 ? [{ id: 'all', name: 'All my income' }] : []),
+  ];
+  const usePills = sourceOptions.length <= 4;
+
+  const headline = !w.runOutWeek
+    ? 'Your savings already carry you through.'
+    : weeksGained > 0
+      ? b.runOutWeek
+        ? `A full buffer buys you ${weeksGained} more week${weeksGained === 1 ? '' : 's'}.`
+        : `A full buffer carries you all ${HORIZON} weeks.`
+      : 'A buffer alone won’t close this gap.';
+
   return (
-    <div className="wrap">
-      <PageHead step="Tool 2 of 3" title="What-if Simulator">
-        Choose which income stops, when, and for how long. We project your balance week by week, with and without the planner&rsquo;s buffer.
+    <div className="wrap sim">
+      <PageHead step="Tool 2 of 3" title="What if a job stops?">
+        Pick an income, when it stops and for how long. We project your balance week by week.
       </PageHead>
 
       {profile.isSample && <SampleBanner />}
 
-      <section className="panel">
-        <h2 className="sr-only">Scenario</h2>
-        <div className="sim-controls">
-          <div className="field">
-            <label htmlFor="sim-source">What if I lose…</label>
-            <select id="sim-source" className="select" value={validSource} onChange={(e) => setSourceId(e.target.value)}>
-              {profile.sources.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-              {profile.sources.length > 1 && <option value="all">All my income</option>}
-            </select>
-          </div>
-          <div className="field range-field">
-            <label htmlFor="sim-start">Starting in week <output htmlFor="sim-start">{startWeek}</output></label>
-            <input id="sim-start" type="range" min="1" max="12" value={startWeek} onChange={(e) => setStartWeek(Number(e.target.value))} />
-          </div>
-          <div className="field range-field">
-            <label htmlFor="sim-dur">For <output htmlFor="sim-dur">{permanent ? 'good' : `${duration} weeks`}</output></label>
-            <input id="sim-dur" type="range" min="1" max="26" value={duration} disabled={permanent} onChange={(e) => setDuration(Number(e.target.value))} />
-            <label className="check"><input type="checkbox" checked={permanent} onChange={(e) => setPermanent(e.target.checked)} /> It doesn&rsquo;t come back</label>
-          </div>
-          <div className="field">
-            <label htmlFor="sim-spend">Everyday spend per week</label>
-            <div className="money">
-              <input id="sim-spend" className="input" type="number" inputMode="decimal" min="0" value={spend} onChange={(e) => setSpend(e.target.value)} />
+      <section className="sim-strip" aria-labelledby="sim-scenario">
+        <h2 id="sim-scenario" className="sr-only">Scenario</h2>
+
+        <div className="sim-ctl sim-ctl-source">
+          {usePills ? (
+            <fieldset className="sim-fieldset">
+              <legend className="sim-label">If I lose</legend>
+              <div className="sim-pills">
+                {sourceOptions.map((s) => (
+                  <label key={s.id} className="sim-pill">
+                    <input type="radio" name="sim-source" value={s.id} checked={validSource === s.id} onChange={() => setSourceId(s.id)} />
+                    <span>{s.name}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : (
+            <div className="field">
+              <label className="sim-label" htmlFor="sim-source">If I lose</label>
+              <select id="sim-source" className="select" value={validSource} onChange={(e) => setSourceId(e.target.value)}>
+                {sourceOptions.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
             </div>
-            <span className="hint">Your plan says {gbp(plan.safeWeekly)}</span>
+          )}
+        </div>
+
+        <div className="sim-ctl">
+          <div className="sim-range-head">
+            <label className="sim-label" htmlFor="sim-start">Starting</label>
+            <output className="sim-readout" htmlFor="sim-start">Week {startWeek}</output>
           </div>
+          <input id="sim-start" className="sim-range" type="range" min="1" max="12" value={startWeek}
+            style={{ '--fill': `${((startWeek - 1) / 11) * 100}%` }}
+            onChange={(e) => setStartWeek(Number(e.target.value))} />
+          <div className="sim-scale" aria-hidden="true"><span>1</span><span>12</span></div>
+        </div>
+
+        <div className="sim-ctl">
+          <div className="sim-range-head">
+            <label className="sim-label" htmlFor="sim-dur">For</label>
+            <output className="sim-readout" htmlFor="sim-dur">{permanent ? 'For good' : `${duration} week${duration === 1 ? '' : 's'}`}</output>
+          </div>
+          <input id="sim-dur" className="sim-range" type="range" min="1" max="26" value={duration} disabled={permanent}
+            style={{ '--fill': `${((duration - 1) / 25) * 100}%` }}
+            onChange={(e) => setDuration(Number(e.target.value))} />
+          <label className="sim-switch">
+            <input className="switch" type="checkbox" checked={permanent} onChange={(e) => setPermanent(e.target.checked)} />
+            <span>It doesn&rsquo;t come back</span>
+          </label>
+        </div>
+
+        <div className="sim-ctl">
+          <label className="sim-label" htmlFor="sim-spend">Everyday spend / week</label>
+          <div className="money">
+            <input id="sim-spend" className="input" type="number" inputMode="decimal" min="0" value={spend} onChange={(e) => setSpend(e.target.value)} />
+          </div>
+          <button type="button" className="sim-reset" onClick={() => setSpend(plan.safeWeekly)}>
+            Plan says {gbp(plan.safeWeekly)}
+          </button>
         </div>
       </section>
 
-      <div className="callout" style={{ margin: '16px 0' }} aria-live="polite">
-        <span>
-          Losing <strong>{sim.lostName}</strong> takes about <strong>{gbp(sim.weeklyLoss)} a week</strong> out of your income
-          {' '}({gbp(sim.totalLoss)} in total over this period).{' '}
-          {weeksGained > 0 && w.runOutWeek
-            ? <>A full buffer would buy you <strong>{b.runOutWeek ? `${weeksGained} more weeks` : `all ${HORIZON} weeks`}</strong>.</>
-            : !w.runOutWeek
-              ? <>Your current savings already carry you through.</>
-              : <>Even a full buffer doesn&rsquo;t change when you run out here, so look at cutting costs too.</>}
-        </span>
-      </div>
+      <section className="sim-stage" aria-labelledby="sim-verdict">
+        <div className="sim-stage-copy" aria-live="polite">
+          <p className="sim-stage-eyebrow">Losing {sim.lostName}: {gbp(sim.weeklyLoss)} less a week</p>
+          <h2 id="sim-verdict" className="sim-stage-title">{headline}</h2>
+          <p className="sim-stage-sub">{gbp(sim.totalLoss)} less income over this period.</p>
+        </div>
+        <div className="sim-compare">
+          <Outcome kind="without" title="Current savings" result={w} horizon={HORIZON} />
+          <Outcome kind="with" title="With the planner’s buffer" result={b} horizon={HORIZON} />
+        </div>
+      </section>
 
-      <div className="outcomes">
-        <Outcome kind="without" title="With your current savings" result={w} horizon={HORIZON} />
-        <Outcome kind="with" title="With the planner&rsquo;s buffer" result={b} horizon={HORIZON} />
-      </div>
-
-      <section className="panel" style={{ marginTop: 16 }}>
+      <section className="panel sim-chart">
         <div className="panel-head">
           <div>
-            <h2 style={{ fontSize: '1.25rem' }}>Your balance, week by week</h2>
-            <p>Next {HORIZON} weeks. Below the line means you&rsquo;d need to borrow, get help, or cut back.</p>
+            <h2>Balance, week by week</h2>
+            <p>Next {HORIZON} weeks. Below £0 means borrowing, help or cutting back.</p>
           </div>
         </div>
         <BalanceChart sim={sim} startWeek={startWeek} endWeek={endWeek} />
         <details className="data-toggle">
-          <summary>Show the numbers as a table</summary>
+          <summary>Show as a table</summary>
           <div style={{ overflowX: 'auto' }}>
             <table className="data-table">
               <caption className="sr-only">Projected balance each week, with and without the buffer</caption>
@@ -161,42 +210,43 @@ export default function Simulator() {
         </details>
       </section>
 
-      <section className="panel" style={{ marginTop: 16 }}>
-        <h2 style={{ fontSize: '1.15rem' }}>Bills hit first</h2>
-        <p className="muted small" style={{ margin: '4px 0 14px' }}>
-          Without a buffer. Each week we pay essential bills first, then important, then flexible, so the first bills you can&rsquo;t cover from your own money show here.
-        </p>
-        {w.billsHit.length === 0 ? (
-          <p>No bills go unpaid in this scenario, even without a buffer.</p>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table className="bills-table">
-              <thead>
-                <tr><th>When</th><th>Bill</th><th>Priority</th><th className="r">Amount</th></tr>
-              </thead>
-              <tbody>
-                {w.billsHit.slice(0, 6).map((x, i) => (
-                  <tr key={i}>
-                    <td>Week {x.week} · {dateLabel(x.date)}</td>
-                    <td>{x.name}</td>
-                    <td><span className={`tag ${x.priority === 'essential' ? 'danger' : x.priority === 'important' ? 'draw' : 'even'}`}>{x.priority}</span></td>
-                    <td className="r">{gbp(x.amount)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {w.billsHit.length > 6 && <p className="hint" style={{ marginTop: 8 }}>And {w.billsHit.length - 6} more after that.</p>}
+      <div className="sim-lower">
+        <section className="panel sim-bills">
+          <div className="panel-head">
+            <div>
+              <h2>Bills hit first</h2>
+              <p>Without a buffer. Essentials are paid first, then important, then flexible.</p>
+            </div>
           </div>
-        )}
-      </section>
+          {w.billsHit.length === 0 ? (
+            <p className="sim-allclear">No bills go unpaid, even without a buffer.</p>
+          ) : (
+            <>
+              <ul className="sim-bill-list">
+                {w.billsHit.slice(0, 6).map((x, i) => (
+                  <li key={i}>
+                    <div className="sim-bill-main">
+                      <strong>{x.name}</strong>
+                      <span>Week {x.week} · {dateLabel(x.date)}</span>
+                    </div>
+                    <span className={`tag ${x.priority === 'essential' ? 'danger' : x.priority === 'important' ? 'draw' : 'even'}`}>{x.priority}</span>
+                    <span className="sim-bill-amt num">{gbp(x.amount)}</span>
+                  </li>
+                ))}
+              </ul>
+              {w.billsHit.length > 6 && <p className="hint" style={{ marginTop: 10 }}>And {w.billsHit.length - 6} more after that.</p>}
+            </>
+          )}
+        </section>
 
-      <div style={{ marginTop: 16 }}>
-        <Explain kind="simulation" figures={figures} />
+        <div className="sim-explain">
+          <Explain kind="simulation" figures={figures} />
+        </div>
       </div>
 
-      <p className="hint" style={{ marginTop: 16 }}>
-        How this works: other income continues at its usual (median) weekly level, bills leave on their due day, and everyday spending leaves weekly.
-        &ldquo;With the planner&rsquo;s buffer&rdquo; starts from your buffer target of {gbp(plan.bufferTarget)} instead of your current {gbp(plan.savings)}.
+      <p className="hint sim-method">
+        Other income continues at its usual (median) weekly level, bills leave on their due day, everyday spending leaves weekly.
+        &ldquo;With the planner&rsquo;s buffer&rdquo; starts from your target of {gbp(plan.bufferTarget)} instead of your current {gbp(plan.savings)}.
       </p>
     </div>
   );

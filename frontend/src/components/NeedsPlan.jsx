@@ -4,11 +4,11 @@ import { sampleProfile } from '../lib/sample';
 export function NeedsPlan({ what }) {
   const { setProfile } = useProfile();
   return (
-    <div className="panel empty fade-in">
+    <div className="panel empty needs-plan fade-in">
+      <span className="needs-plan-mark" aria-hidden="true" />
       <h2>Start with your income</h2>
       <p>
-        To {what}, we first need your recent income and bills. It takes about three minutes in the
-        planner, and you only need to do it once.
+        To {what}, we need your recent income and bills first. About three minutes, once.
       </p>
       <div className="row" style={{ justifyContent: 'center' }}>
         <a className="btn btn-primary" href="#/plan">Go to the planner</a>

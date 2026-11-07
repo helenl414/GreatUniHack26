@@ -1,0 +1,87 @@
+/* Sothis skin over the component rules kept from the first build.
+   Loaded last so these win. Page-specific layout lives in styles/<page>.css. */
+
+/* Forms */
+.field label, .label { font-weight: 600; font-size: 0.88rem; letter-spacing: -0.005em; }
+.hint { font-size: 0.83rem; color: var(--ink-3); }
+.input, .select, .textarea {
+  border-radius: 14px; border: var(--input-border-w) solid var(--line);
+  background: var(--surface-2); padding: 12px 16px;
+  transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.input:hover, .select:hover, .textarea:hover { border-color: var(--line-strong); }
+.input:focus, .select:focus, .textarea:focus {
+  background: var(--surface); border-color: var(--focus);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--focus) 16%, transparent);
+}
+.money::before { left: 15px; }
+.money .input { padding-left: 30px; }
+.question { padding: 28px 0; }
+.q-num { background: var(--action); color: var(--on-action); padding: 2px 10px; font-size: 0.75rem; }
+.source-card { border-radius: var(--radius); padding: 20px; background: var(--surface-2); border-color: var(--line); }
+.chip { border-style: solid; border-color: var(--line); background: var(--surface); min-height: 38px; padding: 6px 16px; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+.chip:hover { background: var(--brand-100); border-color: transparent; color: var(--action); }
+.form-actions { padding-top: 28px; }
+
+.choice { border-radius: var(--radius-lg); padding: 28px; border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease), border-color var(--t-fast); }
+.choice:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--line-strong); }
+.choice-icon { width: 48px; height: 48px; border-radius: 16px; background: var(--brand-100); }
+.choice h3 { font-size: 1.3rem; }
+
+/* Figures — the lead tile is the purple stage */
+.hero-figure { border-radius: var(--radius-lg); border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--surface); }
+.hero-figure > div { padding: 26px 28px; }
+.hero-figure .lead { background: var(--stage); color: #fff; }
+.hero-figure .lead .figure-label, .hero-figure .lead .figure-note { color: rgba(255, 255, 255, 0.78); }
+.figure-label { font-size: 0.84rem; font-weight: 600; color: var(--ink-3); letter-spacing: 0.01em; }
+.figure-value { font-size: 2.2rem; font-weight: 650; letter-spacing: -0.04em; margin-top: 8px; }
+.lead .figure-value { font-size: clamp(2.8rem, 6.4vw, 4rem); }
+.meter { height: 6px; background: var(--canvas-2); }
+.lead .meter { background: rgba(255, 255, 255, 0.2); }
+.lead .meter > span { background: #fff; }
+
+.tooltip { border-radius: 14px; box-shadow: var(--shadow-lift); padding: 12px 14px; }
+.swatch { border-radius: 5px; }
+
+/* Tags & lists */
+.tag { font-weight: 600; padding: 5px 12px; font-size: 0.8rem; }
+.month-list li { padding: 12px 0; }
+.advice-list { gap: 16px; }
+.advice-list li { grid-template-columns: 4px 1fr; gap: 16px; }
+
+/* Explain card */
+.explain { border: 1px solid var(--line); background: linear-gradient(180deg, var(--brand-100), var(--surface) 140px); }
+:root[data-theme='dark'] .explain { border-color: var(--line); }
+.explain-badge { padding: 5px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.explain-summary { font-size: 1.15rem; line-height: 1.55; letter-spacing: -0.01em; }
+
+/* Simulator */
+.outcome { border-radius: var(--radius-lg); border-top-width: 1px; box-shadow: var(--shadow); padding: 26px; position: relative; overflow: hidden; }
+.outcome::before { content: ''; position: absolute; inset: 0 0 auto; height: 4px; background: var(--c); }
+.outcome .verdict { font-size: 1.7rem; letter-spacing: -0.035em; font-weight: 650; }
+input[type='range'] { accent-color: var(--action); }
+
+/* Report sheet stays paper-white and brand purple in both themes */
+.report-sheet { border-radius: var(--radius-lg); box-shadow: var(--shadow-lift); border: 0; }
+.report-sheet h2 { color: #3c1053; }
+.report-header { border-bottom-color: #3c1053; }
+
+/* Empty + sample banner */
+.empty { padding: 72px 24px; }
+.sample-banner { border-radius: 999px; padding: 10px 10px 10px 20px; background: var(--draw-bg); }
+@media (max-width: 560px) { .sample-banner { border-radius: var(--radius); } }
+
+/* Display settings: a glass sheet */
+.settings-btn { border: 1px solid transparent; background: transparent; min-height: 44px; }
+.settings-btn:hover, .settings-btn[aria-expanded='true'] { background: var(--header-hover); border-color: transparent; }
+.settings-panel {
+  border-radius: var(--radius-lg); border: 1px solid var(--line); padding: 24px;
+  box-shadow: var(--shadow-lift); top: calc(100% + 14px);
+}
+.segmented { border-radius: 14px; border: 0; background: var(--canvas-2); padding: 4px; gap: 4px; }
+.segmented label { border-radius: 10px; min-height: 40px; }
+.segmented label + label { border-left: 0; }
+.segmented label:has(input:checked) { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+:root[data-contrast='more'] .segmented label:has(input:checked) { background: var(--action); color: var(--on-action); }
+.term-def { border-radius: 12px; }
+.form-steps a { border-radius: 999px; }

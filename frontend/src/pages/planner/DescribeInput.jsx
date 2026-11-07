@@ -46,21 +46,20 @@ export function DescribeInput({ onParsed, onBack }) {
   };
 
   return (
-    <div className="panel fade-in">
-      <button className="btn btn-ghost btn-small" onClick={onBack} style={{ marginLeft: -12 }}>
-        <IconBack /> Choose another way
+    <div className="panel pl-describe fade-in">
+      <button className="btn btn-ghost btn-small pl-back" onClick={onBack}>
+        <IconBack /> Back
       </button>
-      <h2 style={{ marginTop: 8 }}>Tell us in your own words</h2>
-      <p className="muted" style={{ marginTop: 6, maxWidth: '62ch' }}>
-        Say or type where your money comes from, roughly how much and when, and what you have to pay
-        each month. We&rsquo;ll turn it into figures you can check before anything is calculated.
+      <h2>Tell us in your own words</h2>
+      <p className="muted pl-sub">
+        Where your money comes from, roughly how much, and what you pay each month. You&rsquo;ll check every figure before anything is worked out.
       </p>
 
-      <div className="field" style={{ marginTop: 20 }}>
-        <label htmlFor="describe">Your situation</label>
+      <div className="field pl-describe-field">
+        <label htmlFor="describe" className="sr-only">Your situation</label>
         <textarea
           id="describe"
-          className="textarea"
+          className="textarea pl-textarea"
           value={speech.interim ? `${text} ${speech.interim}` : text}
           onChange={(e) => setText(e.target.value)}
           placeholder={EXAMPLE}
@@ -68,11 +67,11 @@ export function DescribeInput({ onParsed, onBack }) {
           aria-describedby="describe-hint"
         />
         <span id="describe-hint" className="hint">
-          Mention amounts with £ and say if they are per week or per month, and if work is seasonal (e.g. &ldquo;in summer&rdquo;).
+          Tip: use £, say per week or per month, and mention seasons (&ldquo;in summer&rdquo;).
         </span>
       </div>
 
-      <div className="row" style={{ marginTop: 16, justifyContent: 'space-between' }}>
+      <div className="row pl-describe-actions">
         <div className={`mic ${speech.listening ? 'listening' : ''}`}>
           {speech.supported ? (
             <>

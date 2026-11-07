@@ -1,24 +1,23 @@
-import { IconPlan, IconReport, IconSim, SteadyMark } from './Icons';
+import { IconPlan, IconReport, IconSim, SothisMark } from './Icons';
 import { DisplaySettings } from './DisplaySettings';
 
 const TABS = [
-  { id: 'plan', label: 'Planner', long: 'Smoothing planner', Icon: IconPlan },
-  { id: 'simulate', label: 'Simulator', long: 'What-if simulator', Icon: IconSim },
-  { id: 'report', label: 'Prove income', long: 'Prove my income', Icon: IconReport },
+  { id: 'plan', label: 'Plan', long: 'Planner', Icon: IconPlan },
+  { id: 'simulate', label: 'What if', long: 'What-if', Icon: IconSim },
+  { id: 'report', label: 'Prove', long: 'Prove income', Icon: IconReport },
 ];
 
 export function TopBar({ route }) {
   return (
     <header className="topbar">
-      <div className="wrap topbar-inner">
-        <a className="brand" href="#/" aria-label="Steady home">
-          <SteadyMark />
-          Steady
+      <div className="topbar-inner">
+        <a className="brand" href="#/" aria-label="Sothis home">
+          <SothisMark size={26} />
+          Sothis
         </a>
         <nav className="tabs" aria-label="Tools">
-          {TABS.map((t, i) => (
+          {TABS.map((t) => (
             <a key={t.id} className="tab" href={`#/${t.id}`} aria-current={route === t.id ? 'page' : undefined}>
-              <span className="tab-num" aria-hidden="true">{i + 1}</span>
               {t.long}
             </a>
           ))}
@@ -48,9 +47,13 @@ export function FooterNote() {
   return (
     <footer className="footer-note no-print">
       <div className="wrap">
-        Steady is education and planning support, not regulated financial advice. Figures are
-        calculated from what you enter and stay on this device. For free, impartial money guidance,
-        visit MoneyHelper.
+        <span className="footer-brand">
+          <SothisMark size={18} /> Sothis
+        </span>
+        <p>
+          Planning support, not regulated financial advice. Figures come from what you enter and
+          stay on this device. Free, impartial guidance: MoneyHelper, Citizens Advice, StepChange.
+        </p>
       </div>
     </footer>
   );
@@ -61,7 +64,7 @@ export function PageHead({ step, title, children }) {
     <div className="page-head">
       {step && <div className="eyebrow">{step}</div>}
       {/* tabIndex lets App move focus here after navigation, so screen readers announce the new page. */}
-      <h1 tabIndex={-1} data-page-title style={{ marginTop: step ? 6 : 0, outline: 'none' }}>{title}</h1>
+      <h1 tabIndex={-1} data-page-title style={{ marginTop: step ? 12 : 0, outline: 'none' }}>{title}</h1>
       {children && <p>{children}</p>}
     </div>
   );

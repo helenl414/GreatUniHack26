@@ -80,15 +80,20 @@ export const IconClose = (p) => (
 );
 
 /** The Steady mark: uneven bars, one steady line. */
-export function SteadyMark({ size = 30 }) {
+// Sothis mark: the four-point compass star. Only the north-east point is red (brand rule).
+const MARK_BODY =
+  'M120.458 174.684L8.053 235.009A15.279 15.279 0 0 0 17.514 263.585L166.228 241.587A52.781 52.781 0 0 0 210.573 198.013L231.917 69.366A15.279 15.279 0 0 0 204.029 58.547L140.788 155.979A55.558 55.558 0 0 1 120.458 174.684ZM268.815 330.428L246.158 468.07A15.279 15.279 0 0 0 274.225 478.591L338.317 375.023A55.558 55.558 0 0 1 356.966 356.625L464.663 291.975A15.279 15.279 0 0 0 454.343 263.796L312.412 286.907A52.781 52.781 0 0 0 268.815 330.428ZM22.258 310.348L120.526 369.573A55.558 55.558 0 0 1 141.185 391.611L199.247 503.747A15.279 15.279 0 0 0 228.042 495.476L215.36 340.492A52.781 52.781 0 0 0 166.695 292.163L31.286 282.027A15.279 15.279 0 0 0 22.258 310.348Z';
+const MARK_NE =
+  'M256.633 15.665L260.961 186.727A52.781 52.781 0 0 0 313.319 238.171L480.007 239.453A15.279 15.279 0 0 0 487.136 210.6L375.001 152.68A55.558 55.558 0 0 1 351.703 129.885L285.325 7.972A15.279 15.279 0 0 0 256.633 15.665Z';
+
+/** tone: 'colour' (purple on light), 'white' (reversed, on purple), 'auto' (follows theme ink) */
+export function SothisMark({ size = 28, tone = 'auto', ...rest }) {
+  const body = tone === 'white' ? '#FFFFFF' : tone === 'colour' ? '#3C1053' : 'var(--mark-ink, #3C1053)';
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#5B3E96" />
-      <rect x="7" y="13" width="3.5" height="12" rx="1" fill="#B9C6E8" />
-      <rect x="12.5" y="8" width="3.5" height="17" rx="1" fill="#B9C6E8" />
-      <rect x="18" y="16" width="3.5" height="9" rx="1" fill="#EBC48A" />
-      <rect x="23.5" y="11" width="3.5" height="14" rx="1" fill="#B9C6E8" />
-      <path d="M5 15.5c4-1.6 7-1.6 11 0s7 1.6 11 0" stroke="#fff" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+    <svg width={size} height={size} viewBox="0 0 495.403 512" aria-hidden="true" {...rest}>
+      <path fill={body} d={MARK_BODY} />
+      <path fill="#E90000" d={MARK_NE} />
     </svg>
   );
 }
+export const SteadyMark = SothisMark;

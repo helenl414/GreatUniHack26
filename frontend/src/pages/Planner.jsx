@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProfile } from '../lib/store';
 import { emptyProfile, normaliseProfile, sampleProfile } from '../lib/sample';
 import { PageHead } from '../components/AppShell';
-import { IconForm, IconMic } from '../components/Icons';
+import { IconArrow, IconForm, IconMic } from '../components/Icons';
 import { DescribeInput } from './planner/DescribeInput';
 import { QuestionForm } from './planner/QuestionForm';
 import { PlanResults } from './planner/PlanResults';
@@ -48,32 +48,37 @@ export default function Planner() {
   };
 
   return (
-    <div className="wrap">
-      <PageHead step="Tool 1 of 3" title="Income Smoothing Planner">
-        Find a safe weekly spend based on your low months, not your average, and a buffer that carries you through the gaps.
+    <div className="wrap planner">
+      <PageHead step="Planner" title={mode === 'results' ? 'Your plan' : 'Plan on your low months.'}>
+        {mode === 'results'
+          ? 'Built from your quieter months, so it holds up when work dries up.'
+          : 'A safe weekly spend and a buffer that carries you through the gaps.'}
       </PageHead>
 
       {mode === 'results' && profile?.isSample && <SampleBanner />}
 
       {mode === 'choose' && (
         <div className="fade-in">
-          <div className="choice-grid">
-            <button className="choice" onClick={() => setMode('describe')}>
+          <div className="choice-grid pl-choices">
+            <button className="choice pl-choice pl-choice--voice" onClick={() => setMode('describe')}>
               <span className="choice-icon"><IconMic /></span>
-              <h3>Tell us in your own words</h3>
-              <p>Speak or type a description of your jobs, pay and bills. We&rsquo;ll pull out the figures for you to check.</p>
-              <span className="go">Speak or type →</span>
+              <span className="pl-choice-tag">About 1 minute</span>
+              <h3>Just tell us</h3>
+              <p>Speak or type about your jobs, pay and bills. We pull out the figures for you to check.</p>
+              <span className="go">Speak or type <IconArrow /></span>
             </button>
-            <button className="choice" onClick={startForm}>
+            <button className="choice pl-choice" onClick={startForm}>
               <span className="choice-icon"><IconForm /></span>
-              <h3>Answer a few questions</h3>
-              <p>Four short questions about your income, bills and savings. Best if you have your bank app to hand.</p>
-              <span className="go">Start the questions →</span>
+              <span className="pl-choice-tag">4 short questions</span>
+              <h3>Fill it in</h3>
+              <p>Income, bills and savings, month by month. Handy with your bank app open.</p>
+              <span className="go">Start the questions <IconArrow /></span>
             </button>
           </div>
-          <p className="muted small" style={{ marginTop: 16 }}>
-            Just looking? <button className="btn btn-ghost btn-small" onClick={useSample}>Use sample data</button>
-          </p>
+          <div className="pl-sample">
+            <span className="muted small">Just looking around?</span>
+            <button className="btn btn-ghost btn-small" onClick={useSample}>Try sample data</button>
+          </div>
         </div>
       )}
 

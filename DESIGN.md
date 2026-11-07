@@ -1,4 +1,4 @@
-# Steady — design direction
+# Sothis — design direction
 
 **Concept.** A steady hand: calm, plain-language planning for income that arrives in lumps. The
 recurring motif is one smooth line drawn through uneven bars: in the logo, the landing hero and the
@@ -7,21 +7,30 @@ planner chart.
 **Audience.** Seasonal, part-time and short-term workers, and people who change jobs often. Many will
 use it on a phone, some while stressed about money. Plain words, big numbers, no jargon.
 
-**Typography.** DM Sans Variable (bundled, works offline) for everything. Headings 700 with tight
-tracking; body 16px / 1.55. All money uses tabular numerals. The one big number per screen (safe weekly
-spend, run-out week) is the hierarchy anchor.
+**Brand.** Sothis (Sirius): the four-point compass star in NatWest purple `#3C1053`, with only the
+north-east point in NatWest red `#E90000`. Red appears nowhere else in the UI. Mark lives in
+`frontend/src/components/Icons.jsx` (`SothisMark`); brand files from `sothis-brand-assets`.
 
-**Colour.** Calm, clean NatWest palette (muted purples, soft lavender, gentle accents), defined as
-tokens at the top of `frontend/src/styles.css`. Avoid saturated fills and pure black/white by default.
-- Light: white header with a hairline, soft lavender hero `#F3EFFA → #EBE4F6`, canvas `#F7F6FA`,
-  ink `#2A2433` (15:1), secondary text `#57505F` (7.7:1), muted purple action `#5B3E96` (8.2:1 with white).
-- Dark: soft charcoal-plum, not black: canvas `#17151C`, surfaces `#1C1922`, ink `#ECE9F1`,
-  calm sky action `#8EC3DC` (9:1 with dark text).
-- Status: teal `#2E6575` on `#E6F1F4` (set aside), amber `#7A5310` on `#FBF0DC` (draw),
-  rose `#9A3446` on `#F9E6E8` (shortfall). All text pairs meet WCAG AA.
-- Charts: soft blue `#7491CF` income, soft amber `#EBC48A` (outlined) below steady pay, purple steady line,
-  rose for "current savings only".
-- The opt-in High contrast setting is the only place pure black/white is used.
+**Typography.** Plus Jakarta Sans Variable (the wordmark's family, bundled) for everything. Headlines
+600-650 with tight tracking (-0.035 to -0.05em) and large sizes (h1 up to 4.25rem); body 16px / 1.6.
+All money uses tabular numerals. One big number per screen is the hierarchy anchor.
+
+**Colour & surfaces.** Warm paper canvas `#F7F4F0`, white surfaces, deep plum ink `#1D1224`.
+Primary action is NatWest purple (pill). The "stage" (purple radial gradient, `--stage`) is reserved
+for the single most important thing on a screen: the landing hero and the lead figure.
+Tool tiles use three soft tints (lilac, sand, sage). Dark mode is deep plum `#110A16`, lilac action.
+
+**Glass.** Only three places: the floating top nav pill, the mobile tab bar, and the hero figure card on
+the stage. Disabled under `prefers-reduced-transparency` and high contrast.
+
+**Geometry.** 32px stage, 24px cards, 14px inputs, pill buttons, 50px controls, 1160px content width,
+soft long shadows that lift on hover.
+
+**Layout.** Desktop: floating glass nav with three tools. Phone (<860px): floating glass tab bar.
+CSS is split: `styles/base.css` (tokens, shell) → `legacy.css` → `skin.css` → one file per page.
+
+**Motion.** 160-260ms, `cubic-bezier(.22,.8,.24,1)`. Hero bars grow and the steady line draws; cards
+lift 3-4px on hover. Everything off under reduced motion.
 
 **Display settings** (top bar → Display, saved on device, applied before first paint):
 Auto/Light/Dark theme, three text sizes (100/112.5/125%), high contrast (black/white text, 2px
@@ -32,15 +41,6 @@ borders, stronger focus), reduce motion. Auto values follow the OS (`prefers-col
 44px touch targets; tap-to-open definitions for jargon (steady pay, buffer, shortfall); chart data
 available as a table; form progress chips and inline errors linked with `aria-describedby`; number
 fields ignore the scroll wheel; read-aloud for explanations; "Delete my data" with confirmation.
-
-**Geometry.** 14px radius panels, 10px inputs, pill buttons. 48px control height (touch-friendly).
-1px borders, almost no shadow. Content width 1080px.
-
-**Layout.** Desktop: purple top bar with three numbered tabs. Phone (<760px): bottom tab bar, single
-column, figures in a 2-up grid. The app is installable (manifest + service worker) and works offline.
-
-**Motion.** 140–220ms ease-out. Only the landing hero animates (bars grow, the steady line draws);
-everything else is a short fade. All motion is disabled under `prefers-reduced-motion`.
 
 **Principles in the UI.** Inclusive (plain language, voice input, phone-first), Robust (deterministic
 maths; AI only explains), Curious (what-if simulator), Sustainable (buffer habits), Ambitious (proof of

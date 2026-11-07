@@ -81,16 +81,20 @@ export function DisplaySettings() {
         className="settings-btn"
         aria-expanded={open}
         aria-controls={panelId}
+        aria-label="Display and accessibility settings"
         onClick={() => setOpen((o) => !o)}
       >
         <IconSliders width={18} height={18} />
-        <span>Display</span>
+        <span className="settings-label">Display</span>
       </button>
 
       {open && (
         <div ref={panelRef} id={panelId} className="settings-panel fade-in" role="dialog" aria-label="Display and accessibility settings">
-          <div className="row" style={{ justifyContent: 'space-between' }}>
-            <h2>Display &amp; accessibility</h2>
+          <div className="settings-head">
+            <div>
+              <h2>Display</h2>
+              <p>Make Sothis comfortable to read.</p>
+            </div>
             <button className="icon-btn" style={{ border: 0 }} aria-label="Close settings" onClick={() => { setOpen(false); btnRef.current?.focus(); }}>
               <IconClose />
             </button>
@@ -120,17 +124,17 @@ export function DisplaySettings() {
             ]}
           />
 
-          <fieldset className="settings-group">
+          <fieldset className="settings-group settings-toggles">
             <legend className="sr-only">Other options</legend>
             <Switch
               label="High contrast"
-              hint="Stronger text, borders and focus outlines"
+              hint="Bolder text, borders and focus rings"
               checked={prefs.highContrast}
               onChange={(highContrast) => set({ highContrast })}
             />
             <Switch
               label="Reduce motion"
-              hint="Turn off animations and transitions"
+              hint="Keep the screen still"
               checked={prefs.reduceMotion}
               onChange={(reduceMotion) => set({ reduceMotion })}
             />
@@ -144,14 +148,14 @@ export function DisplaySettings() {
           </div>
           {confirmDelete && (
             <div className="callout warn" role="alert" style={{ marginTop: 12, flexDirection: 'column' }}>
-              <span>This removes your income, bills and savings from this device. It can&rsquo;t be undone.</span>
+              <span>This removes your income, bills and savings from this device. You can&rsquo;t undo it.</span>
               <div className="row">
                 <button className="btn btn-primary btn-small" onClick={deleteData}>Yes, delete it</button>
                 <button className="btn btn-ghost btn-small" onClick={() => setConfirmDelete(false)}>Keep my data</button>
               </div>
             </div>
           )}
-          <p className="hint" style={{ marginTop: 12 }}>Your settings are saved on this device.</p>
+          <p className="settings-saved">Saved on this device only.</p>
         </div>
       )}
     </div>

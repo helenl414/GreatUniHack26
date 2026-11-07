@@ -85,10 +85,13 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
   const unusedPresets = COMMON_COSTS.filter((p) => !draft.costs.some((c) => c.name.toLowerCase() === p.name.toLowerCase()));
 
   return (
-    <form className="panel fade-in" onSubmit={submit} noValidate>
-      <button type="button" className="btn btn-ghost btn-small" onClick={onBack} style={{ marginLeft: -12 }}>
-        <IconBack /> Choose another way
-      </button>
+    <form className="panel pl-form fade-in" onSubmit={submit} noValidate>
+      <div className="pl-form-top">
+        <button type="button" className="btn btn-ghost btn-small pl-back" onClick={onBack}>
+          <IconBack /> Back
+        </button>
+        <span className="hint">{steps.filter((s) => s.done).length} of {steps.length} answered</span>
+      </div>
 
       {notice && (
         <div className="callout" style={{ margin: '12px 0 8px' }}>
@@ -97,8 +100,8 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </div>
       )}
 
-      <nav aria-label="Questions">
-        <ol className="form-steps">
+      <nav aria-label="Questions" className="pl-steps-nav">
+        <ol className="form-steps pl-steps">
           {steps.map((st, i) => (
             <li key={st.id}>
               <a
@@ -106,7 +109,7 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
                 className={st.done ? 'done' : ''}
                 onClick={(e) => { e.preventDefault(); jumpTo(st.id); }}
               >
-                {st.done ? '✓' : i + 1} {st.label}
+                <span className="pl-step-dot" aria-hidden="true">{st.done ? '✓' : i + 1}</span> {st.label}
                 <span className="sr-only">{st.done ? ' (answered)' : ' (not answered yet)'}</span>
               </a>
             </li>
@@ -114,11 +117,11 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </ol>
       </nav>
 
-      <div style={{ marginTop: 12 }}>
+      <div className="pl-questions">
         <section className="question" id="q-months">
-          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">1</span>How far back can you remember your income?</h3>
-          <p className="hint">More months gives a truer picture, especially if your work is seasonal.</p>
-          <div className="row" role="radiogroup" aria-label="Number of months">
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">1</span>How many months can you recall?</h3>
+          <p className="hint">More months gives a truer picture of seasonal work.</p>
+          <div className="row pl-months" role="radiogroup" aria-label="Number of months">
             {[3, 6, 12].map((n) => (
               <button
                 type="button"
@@ -136,9 +139,9 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </section>
 
         <section className="question" id="q-income">
-          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">2</span>Where does your money come from, and how much did each pay?</h3>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">2</span>What did each source pay?</h3>
           {error && <p id="income-error" className="field-error" role="alert">{error}</p>}
-          <p className="hint">Add each job, gig or other source separately. Use what actually landed in your account after tax. Leave a month at 0 if nothing came in.</p>
+          <p className="hint">One card per job or gig. Use what landed after tax; 0 if nothing came in.</p>
           {draft.sources.map((s, idx) => (
             <div className="source-card" key={s.id}>
               <div className="source-top">
@@ -173,8 +176,8 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
                   </div>
                 ))}
               </div>
-              <button type="button" className="btn btn-ghost btn-small" style={{ marginTop: 8, marginLeft: -12 }} onClick={() => fillSame(s)}>
-                Same every month? Copy the first amount to all
+              <button type="button" className="btn btn-ghost btn-small" style={{ marginTop: 10, marginLeft: -14 }} onClick={() => fillSame(s)}>
+                Same every month? Copy the first amount
               </button>
             </div>
           ))}
@@ -184,8 +187,8 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </section>
 
         <section className="question" id="q-costs">
-          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">3</span>What do you have to pay every month?</h3>
-          <p className="hint">Fixed bills only. Day-to-day spending like food comes out of your safe weekly spend. Priority decides which bills we protect first.</p>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">3</span>What are your fixed bills?</h3>
+          <p className="hint">Food and day-to-day spending come out of your weekly spend. Priority decides what we protect first.</p>
           {draft.costs.map((c) => (
             <div className="cost-row" key={c.id}>
               <div className="field">
@@ -220,8 +223,8 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </section>
 
         <section className="question" id="q-savings">
-          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">4</span>How much do you have saved that you could use in an emergency?</h3>
-          <p className="hint">Money you could reach within a few days. Enter 0 if none. That&rsquo;s a very common starting point.</p>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">4</span>Any emergency savings?</h3>
+          <p className="hint">Money you could reach in a few days. 0 is a very common start.</p>
           <div style={{ maxWidth: 240 }}>
             <MoneyInput id="savings" label="Savings" value={draft.savings} placeholder="0" onChange={(v) => update({ savings: v })} />
           </div>
@@ -236,7 +239,7 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
       )}
 
       <div className="form-actions">
-        <span className="hint" style={{ alignSelf: 'center' }}>Saved on this device only.</span>
+        <span className="hint pl-private" style={{ alignSelf: 'center' }}>Stays on this device.</span>
         <button type="submit" className="btn btn-primary">
           See my plan <IconArrow />
         </button>

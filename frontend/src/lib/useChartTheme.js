@@ -1,19 +1,19 @@
 import { usePreferences } from './preferences';
 
-// Recharts needs literal colours, so mirror the CSS tokens for each theme.
+// Recharts needs literal colours, so mirror the CSS tokens (styles/base.css) for each theme.
 // Every series colour has at least 3:1 contrast against its background.
 const LIGHT = {
-  ink: '#2A2433', ink2: '#57505F', ink3: '#6B6475', grid: '#EEEAF3',
-  bar: '#7491CF', barLow: '#EBC48A', barLowStroke: '#B07C2C', steady: '#5B3E96', average: '#8A8394',
-  without: '#C0606E', with: '#5B3E96', shock: '#F9ECEE', zero: '#57505F',
+  ink: '#1D1224', ink2: '#554A5C', ink3: '#72677A', grid: '#ECE6E0',
+  bar: '#A68BC7', barLow: '#E3B367', barLowStroke: '#9A6A1E', steady: '#3C1053', average: '#8A7F91',
+  without: '#C2334D', with: '#3C1053', shock: '#F6EEE4', zero: '#554A5C', cursor: '#F1EBF6',
 };
 const DARK = {
-  ink: '#ECE9F1', ink2: '#BDB6C8', ink3: '#9A93A6', grid: '#2C2833',
-  bar: '#6F87BF', barLow: '#D6A65F', barLowStroke: '#D6A65F', steady: '#8EC3DC', average: '#9A93A6',
-  without: '#E08F99', with: '#8EC3DC', shock: '#2E2228', zero: '#BDB6C8',
+  ink: '#F2EDF5', ink2: '#C3B8C9', ink3: '#9D92A5', grid: '#2F2437',
+  bar: '#6E5A8A', barLow: '#D6A65F', barLowStroke: '#D6A65F', steady: '#D9C3F5', average: '#9D92A5',
+  without: '#F1A0AD', with: '#D9C3F5', shock: '#2A1D24', zero: '#C3B8C9', cursor: '#2A1D34',
 };
 const MORE = {
-  light: { grid: '#9A9A9A', ink2: '#000000', ink3: '#000000', average: '#000000', bar: '#4A68AE' },
+  light: { grid: '#9A9A9A', ink2: '#000000', ink3: '#000000', average: '#000000', bar: '#6B4E92' },
   dark: { grid: '#6B6B73', ink2: '#FFFFFF', ink3: '#FFFFFF', average: '#FFFFFF' },
 };
 

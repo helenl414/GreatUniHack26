@@ -1,8 +1,8 @@
 // Offline support so Steady works when launched from the home screen.
 // Navigations: network first, falling back to the cached app shell.
 // Static assets: stale-while-revalidate. API calls are never cached.
-const CACHE = 'steady-v1';
-const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.png', '/icons/icon-192.png', '/icons/icon-512.png'];
+const CACHE = 'sothis-v2';
+const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

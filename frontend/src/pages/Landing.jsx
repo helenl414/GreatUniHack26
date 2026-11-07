@@ -1,79 +1,87 @@
 import { useProfile } from '../lib/store';
 import { sampleProfile } from '../lib/sample';
 import { go } from '../lib/useHashRoute';
-import { IconArrow, IconShield } from '../components/Icons';
+import { IconArrow, IconPlan, IconReport, IconShield, IconSim, SothisMark } from '../components/Icons';
 
-// Signature moment: jagged monthly income, and the one steady line Steady draws through it.
-function HeroArt() {
-  const bars = [62, 118, 150, 158, 96, 54, 78, 132];
-  const base = 230;
+// Signature moment: lumpy monthly income, and the one calm line Sothis draws through it.
+function HeroCard() {
+  const bars = [52, 96, 124, 132, 78, 40, 62, 110];
+  const base = 150;
   return (
-    <svg className="hero-art" viewBox="0 0 540 260" role="img" aria-label="Illustration: uneven monthly income bars with a calm, steady line running through them">
-      <style>{`
-        .ha-bar { transform-origin: bottom; transform-box: fill-box; animation: ha-grow 600ms cubic-bezier(.2,.7,.2,1) both; }
-        .ha-line { stroke-dasharray: 520; stroke-dashoffset: 520; animation: ha-draw 1100ms 650ms cubic-bezier(.2,.7,.2,1) forwards; }
-        .ha-label { opacity: 0; animation: ha-fade 400ms 1500ms ease forwards; }
-        @keyframes ha-grow { from { transform: scaleY(0); } }
-        @keyframes ha-draw { to { stroke-dashoffset: 0; } }
-        @keyframes ha-fade { to { opacity: 1; } }
-        @media (prefers-reduced-motion: reduce) { .ha-line { stroke-dashoffset: 0; } .ha-label { opacity: 1; } }
-      `}</style>
-      <line x1="10" x2="424" y1={base} y2={base} style={{ stroke: 'var(--hero-line)' }} />
-      {bars.map((h, i) => (
-        <rect
-          key={i}
-          className="ha-bar"
-          x={18 + i * 51}
-          y={base - h}
-          width="34"
-          height={h}
-          rx="5"
-          style={{ animationDelay: `${i * 50}ms`, fill: h < 70 ? 'var(--p-amber-soft)' : 'var(--hero-bar)' }}
-        />
-      ))}
-      <line x1="10" x2="424" y1={base - 107} y2={base - 107} style={{ stroke: 'var(--ink-3)' }} strokeDasharray="4 6" />
-      <path className="ha-line" d="M12 162 C 110 156, 200 168, 300 160 S 400 158, 424 160" style={{ stroke: 'var(--action)' }} strokeWidth="5" fill="none" strokeLinecap="round" />
-      <g className="ha-label" fontFamily="inherit" fontSize="17">
-        <text x="440" y={base - 111} style={{ fill: 'var(--ink-2)' }} fontWeight="600">Average</text>
-        <text x="440" y={base - 90} style={{ fill: 'var(--ink-3)' }}>looks safe</text>
-        <text x="440" y="157" style={{ fill: 'var(--action)' }} fontWeight="700">Steady pay</text>
-        <text x="440" y="179" style={{ fill: 'var(--ink-2)' }}>actually safe</text>
-      </g>
-    </svg>
+    <div className="hero-card" aria-hidden="true">
+      <div className="hero-card-top">
+        <span className="hc-label">Safe to spend this week</span>
+        <span className="hc-tag">Example</span>
+      </div>
+      <div className="hc-value">£212</div>
+      <svg className="hc-chart" viewBox="0 0 400 160" preserveAspectRatio="none">
+        {bars.map((h, i) => (
+          <rect
+            key={i}
+            className="hc-bar"
+            x={8 + i * 49}
+            y={base - h}
+            width="34"
+            height={h}
+            rx="8"
+            style={{ animationDelay: `${120 + i * 55}ms` }}
+            data-low={h < 60 || undefined}
+          />
+        ))}
+        <path className="hc-line" d="M6 96 C 90 90, 170 102, 250 94 S 360 92, 394 94" />
+      </svg>
+      <div className="hc-foot">
+        <div>
+          <span>Lowest month</span>
+          <strong>£640</strong>
+        </div>
+        <div>
+          <span>Buffer</span>
+          <strong>2.4 of 3 mo</strong>
+        </div>
+      </div>
+    </div>
   );
 }
 
-const FEATURES = [
+const TOOLS = [
   {
-    n: '01',
-    title: 'Income Smoothing Planner',
-    body: 'Tell us what came in from each job and what you have to pay. We find a safe weekly spend from a cautious baseline, not the average, and a buffer target to see you through quiet months.',
     route: 'plan',
-    cta: 'Plan my money',
+    tone: 'lilac',
+    Icon: IconPlan,
+    kicker: 'Plan',
+    title: 'Find your safe weekly spend',
+    body: 'Built from your quiet months, not your best ones. Plus a buffer target that fits.',
+    cta: 'Start planning',
   },
   {
-    n: '02',
-    title: 'What-if Simulator',
-    body: 'What if a job ends? Pick which income stops, when, and for how long. See week by week when money would run out, which bills get hit first, and how much a buffer changes things.',
     route: 'simulate',
-    cta: 'Test a scenario',
+    tone: 'sand',
+    Icon: IconSim,
+    kicker: 'What if',
+    title: 'Stress-test a lost job',
+    body: 'Pick what stops and when. See the week money runs out, with and without a buffer.',
+    cta: 'Run a scenario',
   },
   {
-    n: '03',
-    title: 'Prove My Income',
-    body: 'Turn your income history into a clear, one-page summary for a landlord or lender: income by source, average and lowest months, and how consistently you have earned.',
     route: 'report',
+    tone: 'sage',
+    Icon: IconReport,
+    kicker: 'Prove',
+    title: 'Show you’re reliable',
+    body: 'A clean one-page income summary for a landlord or lender. Print or save as PDF.',
     cta: 'Build my summary',
   },
 ];
 
-const VALUES = [
-  { name: 'Inclusive', body: 'Built for people whose pay is irregular, not treated as an edge case. Plain words, works on any phone.' },
-  { name: 'Robust', body: 'Cautious maths from code you can check. The AI explains figures; it never invents them.' },
-  { name: 'Curious', body: 'Ask "what if?" safely, before it happens, and see the result straight away.' },
-  { name: 'Sustainable', body: 'Small, steady habits, like building a buffer in strong months, that last.' },
-  { name: 'Ambitious', body: 'Show landlords and lenders the reliability you have earned.' },
+const STEPS = [
+  ['Tell us', 'Say it out loud, type it, or answer a few questions.'],
+  ['See your number', 'A cautious weekly spend and a buffer goal.'],
+  ['Test it', 'Find out what happens if a job stops.'],
+  ['Share it', 'Download a self-reported income summary.'],
 ];
+
+const VALUES = ['Inclusive', 'Robust', 'Curious', 'Sustainable', 'Ambitious'];
 
 export default function Landing() {
   const { profile, setProfile } = useProfile();
@@ -84,122 +92,107 @@ export default function Landing() {
   };
 
   return (
-    <>
-      <section className="hero">
-        <div className="wrap hero-inner">
-          <div>
-            <div className="eyebrow">For income that doesn't arrive neatly</div>
-            <h1 tabIndex={-1} data-page-title style={{ outline: 'none' }}>Plan on your steady pay, not your best month.</h1>
-            <p className="lede">
-              Steady helps seasonal, part-time and short-term workers, and anyone who changes jobs
-              often, plan ahead, test how resilient they are, and show the reliability they have earned.
+    <div className="landing">
+      <section className="wrap">
+        <div className="stage">
+          <div className="stage-glow" aria-hidden="true" />
+          <div className="stage-copy">
+            <div className="eyebrow stage-eyebrow">
+              <SothisMark size={14} tone="white" /> For income that doesn’t arrive neatly
+            </div>
+            <h1 tabIndex={-1} data-page-title>
+              Plan on your steady pay, not your best month.
+            </h1>
+            <p className="stage-lede">
+              For seasonal, part-time and gig workers. Know what’s safe to spend, prepare for the
+              quiet months, and prove your income.
             </p>
-            <div className="row">
-              <a className="btn btn-on-dark" href="#disclaimer">
+            <div className="row stage-cta">
+              <a className="btn btn-on-dark" href="#start">
                 Get started <IconArrow />
               </a>
               <button className="btn btn-outline-on-dark" onClick={trySample}>
                 Try with sample data
               </button>
             </div>
-            <div className="audience" aria-label="Who Steady is for">
-              <span>Seasonal work</span>
-              <span>Part-time</span>
-              <span>Temporary &amp; agency</span>
-              <span>Gig work</span>
-              <span>Between jobs</span>
-            </div>
           </div>
-          <HeroArt />
+          <HeroCard />
         </div>
       </section>
 
-      <section className="section">
-        <div className="wrap">
-          <div className="section-head">
-            <div className="eyebrow">Three tools, one picture</div>
-            <h2 style={{ marginTop: 8 }}>Why the average lets you down</h2>
-            <p>
-              When pay jumps around, the average is pulled up by your best months, so spending to it
-              leaves you short in the quiet ones. Steady plans around a cautious baseline instead, then
-              helps you prepare and prove it.
-            </p>
-          </div>
-          <div className="features">
-            {FEATURES.map((f) => (
-              <article className="feature" key={f.n}>
-                <span className="f-num">{f.n}</span>
-                <h3>{f.title}</h3>
-                <p>{f.body}</p>
-                <a href={`#/${f.route}`}>{f.cta} →</a>
-              </article>
-            ))}
-          </div>
+      <section className="wrap statement">
+        <h2>
+          The average lies when pay is lumpy. <span>Sothis plans around your lowest months, so a
+          quiet one never catches you out.</span>
+        </h2>
+      </section>
+
+      <section className="wrap" aria-labelledby="tools-h">
+        <div className="section-intro">
+          <div className="eyebrow">Three tools</div>
+          <h2 id="tools-h">One clear picture of your money.</h2>
+        </div>
+        <div className="tool-grid">
+          {TOOLS.map(({ route, tone, Icon, kicker, title, body, cta }) => (
+            <a className={`tool tool-${tone}`} href={`#/${route}`} key={route}>
+              <span className="tool-icon"><Icon width={22} height={22} /></span>
+              <span className="tool-kicker">{kicker}</span>
+              <h3>{title}</h3>
+              <p>{body}</p>
+              <span className="tool-cta">
+                {cta} <IconArrow width={18} height={18} />
+              </span>
+            </a>
+          ))}
         </div>
       </section>
 
-      <section className="section">
-        <div className="wrap how">
-          <div className="section-head" style={{ marginBottom: 0 }}>
-            <div className="eyebrow">How it works</div>
-            <h2 style={{ marginTop: 8 }}>Say it or fill it in. We do the maths.</h2>
-            <p>
-              Describe your situation by voice or in your own words, or answer a few short questions.
-              Every number is worked out by transparent rules. Then an AI layer explains them in plain
-              English with three practical next steps.
-            </p>
-          </div>
-          <ol className="how-steps">
-            <li><div><h3>Tell us about your income</h3><p>Each job or source, month by month, plus your fixed bills and any savings.</p></div></li>
-            <li><div><h3>Get your steady pay</h3><p>A safe weekly spend, a buffer target, and when to save or draw on it.</p></div></li>
-            <li><div><h3>Stress-test it</h3><p>See what happens if a job stops, with and without your buffer.</p></div></li>
-            <li><div><h3>Share your reliability</h3><p>Download or print a one-page, self-reported income summary.</p></div></li>
-          </ol>
+      <section className="wrap how-band" aria-labelledby="how-h">
+        <div className="section-intro">
+          <div className="eyebrow">How it works</div>
+          <h2 id="how-h">Say it. We do the maths.</h2>
+          <p>Every figure comes from transparent rules. AI only explains them in plain English.</p>
         </div>
+        <ol className="steps">
+          {STEPS.map(([t, b], i) => (
+            <li key={t}>
+              <span className="step-n">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{t}</h3>
+              <p>{b}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      <section className="section">
-        <div className="wrap">
-          <div className="section-head">
-            <div className="eyebrow">What guides us</div>
-            <h2 style={{ marginTop: 8 }}>Our principles</h2>
-          </div>
-          <div className="values">
-            {VALUES.map((v) => (
-              <div className="value" key={v.name}>
-                <h3>{v.name}</h3>
-                <p>{v.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="disclaimer">
-        <div className="wrap">
-          <div className="disclaimer">
-            <div className="row" style={{ marginTop: 0, gap: 10 }}>
-              <IconShield style={{ color: 'var(--action)' }} />
-              <h2>Before you start</h2>
-            </div>
+      <section className="wrap" id="start" aria-labelledby="start-h">
+        <div className="start-card">
+          <div className="start-copy">
+            <IconShield width={28} height={28} />
+            <h2 id="start-h">Before you start</h2>
             <ul>
-              <li>Steady is for <strong>education and planning support</strong>. It is <strong>not regulated financial advice</strong> and doesn't recommend financial products.</li>
-              <li>Results are only as accurate as the figures you enter. They are estimates, not guarantees.</li>
-              <li>The &ldquo;Prove My Income&rdquo; summary is <strong>self-reported</strong>. It isn't verified by Steady or any bank, and landlords or lenders may ask for evidence such as bank statements.</li>
-              <li>What you enter stays on this device. Explanations only receive the calculated figures.</li>
-              <li>If you're worried about money, free and impartial help is available from MoneyHelper, Citizens Advice or StepChange.</li>
+              <li>Planning support, <strong>not regulated financial advice</strong>.</li>
+              <li>Results are estimates, only as good as the figures you enter.</li>
+              <li>Income summaries are <strong>self-reported</strong>, not verified by a bank.</li>
+              <li>Your data stays on this device.</li>
             </ul>
             <div className="row">
               <button className="btn btn-primary" onClick={() => go('plan')}>
-                {profile ? 'I understand, continue' : 'I understand, start planning'} <IconArrow />
+                {profile ? 'I understand, continue' : 'I understand, start'} <IconArrow />
               </button>
               {!profile && (
-                <button className="btn btn-secondary" onClick={trySample}>Explore with sample data</button>
+                <button className="btn btn-secondary" onClick={trySample}>
+                  Use sample data
+                </button>
               )}
             </div>
           </div>
+          <ul className="values" aria-label="Our principles">
+            {VALUES.map((v) => (
+              <li key={v}>{v}</li>
+            ))}
+          </ul>
         </div>
       </section>
-    </>
+    </div>
   );
 }

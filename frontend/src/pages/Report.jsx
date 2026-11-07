@@ -9,6 +9,16 @@ import { NeedsPlan } from '../components/NeedsPlan';
 import { SampleBanner } from '../components/SampleBanner';
 import { IconDownload, IconPrint } from '../components/Icons';
 
+// The sheet is always paper white, so the colour mark is fixed (only the north-east point is red).
+function SheetMark({ size = 28 }) {
+  return (
+    <svg width={size * 0.9676} height={size} viewBox="0 0 495.403 512" aria-hidden="true" focusable="false">
+      <path fill="#3C1053" d="M120.458 174.684L8.053 235.009A15.279 15.279 0 0 0 17.514 263.585L166.228 241.587A52.781 52.781 0 0 0 210.573 198.013L231.917 69.366A15.279 15.279 0 0 0 204.029 58.547L140.788 155.979A55.558 55.558 0 0 1 120.458 174.684ZM268.815 330.428L246.158 468.07A15.279 15.279 0 0 0 274.225 478.591L338.317 375.023A55.558 55.558 0 0 1 356.966 356.625L464.663 291.975A15.279 15.279 0 0 0 454.343 263.796L312.412 286.907A52.781 52.781 0 0 0 268.815 330.428ZM22.258 310.348L120.526 369.573A55.558 55.558 0 0 1 141.185 391.611L199.247 503.747A15.279 15.279 0 0 0 228.042 495.476L215.36 340.492A52.781 52.781 0 0 0 166.695 292.163L31.286 282.027A15.279 15.279 0 0 0 22.258 310.348Z" />
+      <path fill="#E90000" d="M256.633 15.665L260.961 186.727A52.781 52.781 0 0 0 313.319 238.171L480.007 239.453A15.279 15.279 0 0 0 487.136 210.6L375.001 152.68A55.558 55.558 0 0 1 351.703 129.885L285.325 7.972A15.279 15.279 0 0 0 256.633 15.665Z" />
+    </svg>
+  );
+}
+
 const kindLabel = (k) => SOURCE_KINDS.find((x) => x.value === k)?.label ?? 'Other';
 
 // Static SVG (not a charting library) so it prints crisply and survives being saved as a file.
@@ -23,13 +33,13 @@ function MonthlyBars({ months, totals, average }) {
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Monthly income bar chart">
       {totals.map((t, i) => (
         <g key={months[i]}>
-          <rect x={pad.l + i * bw + bw * 0.18} y={y(t)} width={bw * 0.64} height={H - pad.b - y(t)} rx="4" fill="#7491CF" />
-          <text x={pad.l + i * bw + bw / 2} y={y(t) - 5} textAnchor="middle" fontSize="11" fill="#2A2433" fontWeight="600">{gbp(t)}</text>
-          <text x={pad.l + i * bw + bw / 2} y={H - 8} textAnchor="middle" fontSize="11" fill="#57505F">{monthLabel(months[i])}</text>
+          <rect x={pad.l + i * bw + bw * 0.18} y={y(t)} width={bw * 0.64} height={H - pad.b - y(t)} rx="5" fill={t === Math.min(...totals) ? "#E3B367" : "#5A287D"} />
+          <text x={pad.l + i * bw + bw / 2} y={y(t) - 5} textAnchor="middle" fontSize="11" fill="#1D1224" fontWeight="600">{gbp(t)}</text>
+          <text x={pad.l + i * bw + bw / 2} y={H - 8} textAnchor="middle" fontSize="11" fill="#72677A">{monthLabel(months[i])}</text>
         </g>
       ))}
-      <line x1="0" x2={W} y1={y(average)} y2={y(average)} stroke="#5B3E96" strokeWidth="1.5" strokeDasharray="5 4" />
-      <line x1="0" x2={W} y1={H - pad.b} y2={H - pad.b} stroke="#B9B1C9" />
+      <line x1="0" x2={W} y1={y(average)} y2={y(average)} stroke="#1D1224" strokeWidth="1.25" strokeDasharray="4 5" />
+      <line x1="0" x2={W} y1={H - pad.b} y2={H - pad.b} stroke="#E7E0D9" />
     </svg>
   );
 }
@@ -99,32 +109,35 @@ export default function Report() {
       {profile.isSample && <SampleBanner />}
 
       <div className="report-toolbar no-print">
-        <div className="field">
+        <div className="field report-name">
           <label htmlFor="report-name">Name on the summary</label>
           <input id="report-name" className="input" value={name} placeholder="Your full name" onChange={(e) => setName(e.target.value)} autoComplete="name" />
         </div>
-        <button className="btn btn-primary" onClick={() => window.print()}>
-          <IconPrint /> Print or save as PDF
-        </button>
-        <button className="btn btn-secondary" onClick={download}>
-          <IconDownload /> Download file
-        </button>
+        <div className="report-actions">
+          <button className="btn btn-primary" onClick={() => window.print()}>
+            <IconPrint /> Print or save PDF
+          </button>
+          <button className="btn btn-secondary" onClick={download}>
+            <IconDownload /> Download
+          </button>
+        </div>
       </div>
 
       <div className="report-scroll">
         <article className="report-sheet" ref={sheetRef} aria-label="Income summary">
+          <div className="report-brandbar">
+            <span className="report-lockup"><SheetMark /> Sothis</span>
+            <span className="report-label">Self-reported summary</span>
+          </div>
           <header className="report-header">
             <div>
-              <span className="report-label">Self-reported summary</span>
               <h1>Income summary</h1>
-              <p style={{ color: '#57505F', marginTop: 4 }}>{period} · {report.monthCount} months</p>
+              <p className="report-period">{period} · {report.monthCount} months</p>
             </div>
-            <div className="report-meta">
-              <strong>{displayName || 'Name not provided'}</strong>
-              Prepared {longDate(today)}
-              <br />
-              Made with Steady
-            </div>
+            <dl className="report-meta">
+              <div><dt>Prepared for</dt><dd>{displayName || 'Name not provided'}</dd></div>
+              <div><dt>Date</dt><dd>{longDate(today)}</dd></div>
+            </dl>
           </header>
 
           <div className="report-kpis">
@@ -152,10 +165,10 @@ export default function Report() {
 
           <h2>Income by month</h2>
           <MonthlyBars months={report.months} totals={report.totals} average={report.average} />
-          <p style={{ fontSize: '0.75rem', color: '#6B6475', marginTop: 4 }}>Dashed line: average month ({gbp(report.average)}).</p>
+          <p className="report-caption"><span className="rc-dash" aria-hidden="true" /> Average month ({gbp(report.average)}) · <span className="rc-low" aria-hidden="true" /> Lowest month</p>
 
           <h2>Income by source</h2>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="report-table-wrap">
           <table className="report-table">
             <thead>
               <tr>
@@ -217,14 +230,14 @@ export default function Report() {
 
           <footer className="report-foot">
             <strong>Self-reported summary.</strong> These figures were entered by the person named above and have not
-            been verified by Steady, a bank or any third party. It is not a credit check, reference or statement of
+            been verified by Sothis, NatWest, a bank or any third party. It is not a credit check, reference or statement of
             account. Amounts are money received after tax, rounded to the nearest pound. Please ask the person named
             for supporting evidence such as bank statements or payslips.
           </footer>
         </article>
       </div>
 
-      <div className="no-print" style={{ marginTop: 16, maxWidth: 820, marginInline: 'auto' }}>
+      <div className="no-print report-explain">
         <Explain kind="report" figures={figures} title="How to present this summary" />
       </div>
     </div>
