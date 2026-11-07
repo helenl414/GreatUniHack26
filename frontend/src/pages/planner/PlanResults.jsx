@@ -3,6 +3,9 @@ import { Explain } from '../../components/Explain';
 import { gbp, monthLabel, pct } from '../../lib/format';
 import { IconArrow } from '../../components/Icons';
 import { GLOSSARY, Term } from '../../components/Term';
+import { VoiceButton } from '../../components/VoiceButton';
+import { planBriefing } from '../../lib/briefing';
+import { useProfile } from '../../lib/store';
 
 export function PlanResults({ plan, profile, onEdit }) {
   const figures = {
@@ -25,6 +28,7 @@ export function PlanResults({ plan, profile, onEdit }) {
   };
 
   const deficit = plan.status === 'deficit';
+  const profileName = useProfile()?.profile?.name;
 
   return (
     <div className="fade-in pl-results">
@@ -42,6 +46,7 @@ export function PlanResults({ plan, profile, onEdit }) {
               ? `Fixed bills are ${gbp(-plan.spareMonthly)} a month more than a low month brings in.`
               : `For food, travel and everyday costs, after ${gbp(plan.fixedCosts)} of monthly bills.`}
           </p>
+          <VoiceButton tone="dark" getText={() => planBriefing(plan, profileName)} />
         </div>
 
         <div className="pl-side">

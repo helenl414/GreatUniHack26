@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { parseDescription } from '../../lib/api';
 import { recentMonths, uid } from '../../lib/format';
-import { useSpeech } from '../../lib/useSpeech';
+import { useSpeech } from '../../lib/voice';
 import { IconBack, IconInfo, IconMic, IconSpark } from '../../components/Icons';
 
 const EXAMPLE =
@@ -50,53 +50,66 @@ export function DescribeInput({ onParsed, onBack }) {
       <button className="btn btn-ghost btn-small pl-back" onClick={onBack}>
         <IconBack /> Back
       </button>
-      <h2>Tell us in your own words</h2>
+      <h2>Just tell us</h2>
       <p className="muted pl-sub">
-        Where your money comes from, roughly how much, and what you pay each month. You&rsquo;ll check every figure before anything is worked out.
+        Your jobs, roughly what each pays, and your bills. You&rsquo;ll check every figure before anything is worked out.
       </p>
 
+      {speech.supported && (
+        <div className={`voice-hero${speech.listening ? ' is-live' : ''}`}>
+          <button
+            type="button"
+            className="voice-mic"
+            onClick={speech.listening ? speech.stop : speech.start}
+            disabled={speech.transcribing || busy}
+            aria-pressed={speech.listening}
+            aria-label={speech.listening ? 'Stop recording' : 'Start speaking'}
+            style={{ '--lvl': speech.level }}
+          >
+            <IconMic width={30} height={30} />
+          </button>
+          <div className="voice-hero-copy" aria-live="polite">
+            <strong>
+              {speech.transcribing
+                ? 'Writing down what you said…'
+                : speech.listening
+                  ? 'Listening… tap to finish'
+                  : text
+                    ? 'Tap to add more'
+                    : 'Tap and talk'}
+            </strong>
+            <span>
+              {speech.listening
+                ? 'e.g. “Café shifts in summer, about £1,200 a month. Rent is £650.”'
+                : 'Speak naturally, in any accent. Transcribed by ElevenLabs.'}
+            </span>
+          </div>
+        </div>
+      )}
+
       <div className="field pl-describe-field">
-        <label htmlFor="describe" className="sr-only">Your situation</label>
+        <label htmlFor="describe" className="small muted">{speech.supported ? 'Or type it' : 'Your situation'}</label>
         <textarea
           id="describe"
           className="textarea pl-textarea"
           value={speech.interim ? `${text} ${speech.interim}` : text}
           onChange={(e) => setText(e.target.value)}
           placeholder={EXAMPLE}
-          readOnly={speech.listening}
+          readOnly={speech.listening || speech.transcribing}
           aria-describedby="describe-hint"
         />
         <span id="describe-hint" className="hint">
-          Tip: use £, say per week or per month, and mention seasons (&ldquo;in summer&rdquo;).
+          Tip: mention £ amounts, per week or per month, and seasons (&ldquo;in summer&rdquo;).
         </span>
       </div>
 
       <div className="row pl-describe-actions">
-        <div className={`mic ${speech.listening ? 'listening' : ''}`}>
-          {speech.supported ? (
-            <>
-              <button
-                className="btn btn-secondary"
-                onClick={speech.listening ? speech.stop : speech.start}
-                aria-pressed={speech.listening}
-              >
-                <IconMic width={18} height={18} /> {speech.listening ? 'Stop recording' : 'Speak instead'}
-              </button>
-              {speech.listening && (
-                <span className="small muted row" style={{ gap: 8 }}>
-                  <span className="pulse" aria-hidden="true" /> Listening…
-                </span>
-              )}
-            </>
-          ) : (
-            <span className="hint">Voice input isn&rsquo;t available in this browser. Your keyboard&rsquo;s dictation button works too.</span>
-          )}
-        </div>
+        <span />
         <div className="row">
           {!text && (
             <button className="btn btn-ghost btn-small" onClick={() => setText(EXAMPLE)}>Use example</button>
           )}
-          <button className="btn btn-primary" onClick={analyse} disabled={busy || speech.listening}>
+          <button className="btn btn-primary" onClick={analyse} disabled={busy || speech.listening || speech.transcribing}>
             <IconSpark width={18} height={18} /> {busy ? 'Analysing…' : 'Analyse'}
           </button>
         </div>

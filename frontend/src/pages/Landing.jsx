@@ -2,6 +2,8 @@ import { useProfile } from '../lib/store';
 import { sampleProfile } from '../lib/sample';
 import { go } from '../lib/useHashRoute';
 import { gbp } from '../lib/format';
+import { planBriefing } from '../lib/briefing';
+import { VoiceButton } from '../components/VoiceButton';
 import { IconArrow, IconPlan, IconReport, IconShield, IconSim, SothisMark } from '../components/Icons';
 
 // Signature moment: lumpy monthly income, and the one calm line Sothis draws through it.
@@ -123,9 +125,12 @@ export default function Landing() {
             </p>
             <div className="row stage-cta">
               {plan ? (
-                <a className="btn btn-on-dark" href="#/plan">
-                  Open my plan <IconArrow />
-                </a>
+                <>
+                  <a className="btn btn-on-dark" href="#/plan">
+                    Open my plan <IconArrow />
+                  </a>
+                  <VoiceButton tone="dark" getText={() => planBriefing(plan, profile?.name)} />
+                </>
               ) : (
                 <>
                   <a className="btn btn-on-dark" href="#start">
