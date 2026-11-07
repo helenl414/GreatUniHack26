@@ -1,4 +1,4 @@
-// Offline support so Steady works when launched from the home screen.
+// Offline support so Sothis works when launched from the home screen.
 // Navigations: network first, falling back to the cached app shell.
 // Static assets: stale-while-revalidate. API calls are never cached.
 const CACHE = 'steady-v1';

@@ -11,9 +11,9 @@ export function TopBar({ route }) {
   return (
     <header className="topbar">
       <div className="wrap topbar-inner">
-        <a className="brand" href="#/" aria-label="Steady home">
+        <a className="brand" href="#/" aria-label="Sothis home">
           <SteadyMark />
-          Steady
+          Sothis
         </a>
         <nav className="tabs" aria-label="Tools">
           {TABS.map((t, i) => (
@@ -48,7 +48,7 @@ export function FooterNote() {
   return (
     <footer className="footer-note no-print">
       <div className="wrap">
-        Steady is education and planning support, not regulated financial advice. Figures are
+        Sothis is education and planning support, not regulated financial advice. Figures are
         calculated from what you enter and stay on this device. For free, impartial money guidance,
         visit MoneyHelper.
       </div>

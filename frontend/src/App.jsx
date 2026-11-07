@@ -9,10 +9,10 @@ const Simulator = lazy(() => import('./pages/Simulator'));
 const Report = lazy(() => import('./pages/Report'));
 
 const TITLES = {
-  home: 'Steady — plan for income that doesn’t arrive neatly',
-  plan: 'Income Smoothing Planner · Steady',
-  simulate: 'What-if Simulator · Steady',
-  report: 'Prove My Income · Steady',
+  home: 'Sothis — money planning for irregular income',
+  plan: 'Income Smoothing Planner · Sothis',
+  simulate: 'What-if Simulator · Sothis',
+  report: 'Prove My Income · Sothis',
 };
 
 export default function App() {

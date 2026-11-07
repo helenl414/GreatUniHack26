@@ -1239,3 +1239,43 @@ input[type='range'] {
 }
 
 [hidden] { display: none !important; }
+
+/* ---------- Landing: journey card and safety notes ---------- */
+.hero h1 { margin-top: 0; }
+.hero .lede { max-width: 58ch; }
+.journey-card {
+  background: var(--surface);
+  border: var(--border-w) solid var(--hero-line);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+.journey-label { font-size: 0.95rem; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
+.journey-start { font-size: clamp(1.5rem, 3vw, 1.9rem); }
+.journey-value {
+  font-size: clamp(2.6rem, 6vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--action);
+  margin-top: 10px;
+}
+.journey-value small { font-size: 0.4em; font-weight: 600; letter-spacing: 0; color: var(--ink-2); margin-left: 4px; }
+.journey-note { margin-top: 10px; color: var(--ink-2); }
+.safety-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.safety-item {
+  background: var(--surface);
+  border: var(--border-w) solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+}
+.safety-item h3 { font-size: 1.05rem; color: var(--ink); }
+.safety-item p { margin-top: 8px; color: var(--ink-2); }
+@media (max-width: 760px) {
+  .safety-grid { grid-template-columns: 1fr; }
+  .journey-card { padding: 22px; }
+}
+/* Landing: spending card stacked above "What is Sothis?" */
+.hero-stack { grid-template-columns: 1fr; gap: 40px; padding-top: 48px; padding-bottom: 64px; }
+.hero-stack .journey-card { max-width: 720px; }
+.hero-stack .lede { max-width: 72ch; }

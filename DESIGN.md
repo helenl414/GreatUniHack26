@@ -1,4 +1,4 @@
-# Steady — design direction
+# Sothis — design direction
 
 **Concept.** A steady hand: calm, plain-language planning for income that arrives in lumps. The
 recurring motif is one smooth line drawn through uneven bars: in the logo, the landing hero and the

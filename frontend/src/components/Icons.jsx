@@ -79,7 +79,7 @@ export const IconClose = (p) => (
   <svg {...base} width={18} height={18} {...p}><path d="M6 6l12 12M18 6L6 18" /></svg>
 );
 
-/** The Steady mark: uneven bars, one steady line. */
+/** The Sothis mark: uneven bars, one steady line. */
 export function SteadyMark({ size = 30 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">

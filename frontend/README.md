@@ -1,4 +1,4 @@
-# Steady — frontend
+# Sothis — frontend
 
 React + Vite web app for people with irregular income. Installable to a phone's home screen (PWA) and
 works offline. Education and planning support, not regulated financial advice.

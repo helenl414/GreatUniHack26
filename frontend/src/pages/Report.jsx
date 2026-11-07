@@ -123,7 +123,7 @@ export default function Report() {
               <strong>{displayName || 'Name not provided'}</strong>
               Prepared {longDate(today)}
               <br />
-              Made with Steady
+              Made with Sothis
             </div>
           </header>
 
@@ -217,7 +217,7 @@ export default function Report() {
 
           <footer className="report-foot">
             <strong>Self-reported summary.</strong> These figures were entered by the person named above and have not
-            been verified by Steady, a bank or any third party. It is not a credit check, reference or statement of
+            been verified by Sothis, a bank or any third party. It is not a credit check, reference or statement of
             account. Amounts are money received after tax, rounded to the nearest pound. Please ask the person named
             for supporting evidence such as bank statements or payslips.
           </footer>
