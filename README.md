@@ -47,7 +47,7 @@ Explanations use deterministic result templates, always showing a summary, uncer
 
 ## Verification
 
-`npm test` runs 32 independent Vitest checks covering all ten calculation fixtures and related validations: lower quartile, zero/insufficient histories, savings goals, structural gaps, cost rounding, precision, same-day ordering, short months, interruption boundaries, partial payments, integer conservation, ledger reconciliation, report statistics and real PDF generation.
+`npm test` runs 52 independent Vitest checks covering all ten calculation fixtures and related validations: lower quartile, zero/insufficient histories, savings goals, structural gaps, cost rounding, precision, same-day ordering, short months, interruption boundaries, partial payments, integer conservation, ledger reconciliation, report statistics and real PDF generation.
 
 Browser checks used Playwright locators through the connected browser: labelled demo loading, all four tabs, shared draft inputs between form/text modes, review-before-confirmation, changed survival goal, offline natural-language drafts, unavailable-AI error with text preservation, dated interruption comparisons, and an actual PDF download. Desktop and 360-pixel mobile layouts were visually inspected; mobile planner has no horizontal page overflow. Keyboard focus styles, labelled fields, chart text alternatives, dialog focus containment and reduced-motion styling are included. Full assistive-technology certification has not been performed.
 
@@ -63,3 +63,15 @@ Browser checks used Playwright locators through the connected browser: labelled 
 - `tests/engine.test.js`: independent numerical/validation fixtures.
 
 Limitations: no live AI provider test was possible without credentials; browser print-to-paper was not exercised; arbitrary non-Latin PDF source names are not covered by the standard embedded PDF font. Entered data is self-reported and this app provides education and planning support, not regulated financial advice.
+
+## November 2026 update: optional inputs and activity scenarios
+
+Survival goal and monthly variable living costs can be blank in either entry method. Blank goal uses 3 months; zero, fractional or invalid goals remain invalid. Blank living costs in a GBP plan use £869.70/month for a selected ONS average basket for one non-retired adult. This is not an observed personal budget or minimum income standard. Source: [ONS Family spending workbook 2, FYE 2025, Table A23, column K](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/expenditure/datasets/familyspendingworkbook2expenditurebyincome), published 11 June 2026, data covering April 2024–March 2025.
+
+Weekly source amounts: food/non-alcoholic drinks £40.30; clothing/footwear £10.50; household goods/services £28.10; transport £54.30; recreation/culture £40.40; restaurants/hotels £27.10. Sum £200.70/week × 52 ÷ 12 = £869.70/month. Source categories retain their original meaning, including occasional purchases such as vehicles or hotel stays. Housing, energy, communications, insurance, health, education, taxes, alcohol and other expenditure categories are excluded. Users can remove categories already included as recurring costs or enter a custom monthly total. Selected-category equivalents can differ by a penny from their individually displayed sum because the combined total is rounded once.
+
+Defaults are flagged in canonical records, review, planner results and simulator assumptions. Explicitly entered zero living costs are distinguished from an omitted amount. Existing saved plans keep their amounts. Non-GBP plans do not reinterpret the UK amount in another currency: omitted living costs default to zero with a visible missing-cost warning. No exchange rate is invented. Recurring costs and accessible savings remain reviewed inputs.
+
+Simulator now offers either an income interruption or an additional one-off activity. Activity name, amount, date and confirmation that it is not already in the budget are required. Dates outside the horizon are rejected and the view can extend to 52 weeks. The activity is charged once after that day's bills and living costs, before additional flexible spending. Ordinary forecast excludes the activity; both savings comparisons include the same activity and unchanged income/spending. Historical records and report facts never change.
+
+Each simulation ends with deterministic plain-language guidance: a comparison, first gap/bill impact, uncertainty and exactly three next steps. Every amount/date comes from the current result revision; stale guidance is rejected. This works without AI credentials. Additional tests cover optional defaults, category exclusions, currency handling, zero overrides, activity conservation and date validation, ordinary/scenario comparisons, reconciliation, existing gaps, and stale guidance.
