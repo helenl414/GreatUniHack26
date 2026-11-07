@@ -4,12 +4,15 @@ import '@fontsource-variable/dm-sans';
 import './styles.css';
 import App from './App';
 import { ProfileProvider } from './lib/store';
+import { PreferencesProvider } from './lib/preferences';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ProfileProvider>
-      <App />
-    </ProfileProvider>
+    <PreferencesProvider>
+      <ProfileProvider>
+        <App />
+      </ProfileProvider>
+    </PreferencesProvider>
   </StrictMode>,
 );
 

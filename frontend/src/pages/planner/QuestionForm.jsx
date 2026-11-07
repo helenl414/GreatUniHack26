@@ -15,6 +15,7 @@ function MoneyInput({ id, value, onChange, label, ...rest }) {
         step="any"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onWheel={(e) => e.currentTarget.blur()}
         aria-label={label}
         {...rest}
       />
@@ -26,7 +27,10 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
   const [error, setError] = useState(null);
   const months = draft.months;
 
-  const update = (patch) => setDraft((d) => ({ ...d, ...patch }));
+  const update = (patch) => {
+    if (error) setError(null);
+    setDraft((d) => ({ ...d, ...patch }));
+  };
   const updateSource = (id, patch) =>
     update({ sources: draft.sources.map((s) => (s.id === id ? { ...s, ...patch } : s)) });
   const updateCost = (id, patch) => update({ costs: draft.costs.map((c) => (c.id === id ? { ...c, ...patch } : c)) });
@@ -57,11 +61,25 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
     const hasIncome = draft.sources.some((s) => s.amounts.some((a) => Number(a) > 0));
     if (!hasIncome) {
       setError('Add at least one month of income so we have something to plan with.');
-      document.getElementById('q-income')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const first = document.querySelector('#q-income input[inputmode="decimal"]');
+      first?.focus();
+      first?.scrollIntoView({ block: 'center' });
       return;
     }
     setError(null);
     onSubmit();
+  };
+
+  const steps = [
+    { id: 'q-months', label: 'Months', done: true },
+    { id: 'q-income', label: 'Income', done: draft.sources.some((s) => s.amounts.some((a) => Number(a) > 0)) },
+    { id: 'q-costs', label: 'Bills', done: draft.costs.some((c) => Number(c.amount) > 0) },
+    { id: 'q-savings', label: 'Savings', done: draft.savings !== '' && draft.savings != null },
+  ];
+  const jumpTo = (id) => {
+    const el = document.getElementById(id);
+    el?.scrollIntoView({ block: 'start' });
+    el?.querySelector('h3')?.focus();
   };
 
   const unusedPresets = COMMON_COSTS.filter((p) => !draft.costs.some((c) => c.name.toLowerCase() === p.name.toLowerCase()));
@@ -79,9 +97,26 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </div>
       )}
 
+      <nav aria-label="Questions">
+        <ol className="form-steps">
+          {steps.map((st, i) => (
+            <li key={st.id}>
+              <a
+                href={`#/plan`}
+                className={st.done ? 'done' : ''}
+                onClick={(e) => { e.preventDefault(); jumpTo(st.id); }}
+              >
+                {st.done ? '✓' : i + 1} {st.label}
+                <span className="sr-only">{st.done ? ' (answered)' : ' (not answered yet)'}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
       <div style={{ marginTop: 12 }}>
         <section className="question" id="q-months">
-          <h3><span className="q-num">1</span>How far back can you remember your income?</h3>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">1</span>How far back can you remember your income?</h3>
           <p className="hint">More months gives a truer picture, especially if your work is seasonal.</p>
           <div className="row" role="radiogroup" aria-label="Number of months">
             {[3, 6, 12].map((n) => (
@@ -101,7 +136,8 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </section>
 
         <section className="question" id="q-income">
-          <h3><span className="q-num">2</span>Where does your money come from, and how much did each pay?</h3>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">2</span>Where does your money come from, and how much did each pay?</h3>
+          {error && <p id="income-error" className="field-error" role="alert">{error}</p>}
           <p className="hint">Add each job, gig or other source separately. Use what actually landed in your account after tax. Leave a month at 0 if nothing came in.</p>
           {draft.sources.map((s, idx) => (
             <div className="source-card" key={s.id}>
@@ -128,6 +164,8 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
                     <label htmlFor={`a-${s.id}-${i}`}>{monthLabel(m)}{i === 0 || m.endsWith('-01') ? ` ’${m.slice(2, 4)}` : ''}</label>
                     <MoneyInput
                       id={`a-${s.id}-${i}`}
+                      aria-invalid={error && idx === 0 && i === 0 ? true : undefined}
+                      aria-describedby={error && idx === 0 && i === 0 ? 'income-error' : undefined}
                       value={s.amounts[i]}
                       placeholder="0"
                       onChange={(v) => updateSource(s.id, { amounts: s.amounts.map((a, j) => (j === i ? v : a)) })}
@@ -146,7 +184,7 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </section>
 
         <section className="question" id="q-costs">
-          <h3><span className="q-num">3</span>What do you have to pay every month?</h3>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">3</span>What do you have to pay every month?</h3>
           <p className="hint">Fixed bills only. Day-to-day spending like food comes out of your safe weekly spend. Priority decides which bills we protect first.</p>
           {draft.costs.map((c) => (
             <div className="cost-row" key={c.id}>
@@ -182,7 +220,7 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
         </section>
 
         <section className="question" id="q-savings">
-          <h3><span className="q-num">4</span>How much do you have saved that you could use in an emergency?</h3>
+          <h3 tabIndex={-1} style={{ outline: 'none' }}><span className="q-num">4</span>How much do you have saved that you could use in an emergency?</h3>
           <p className="hint">Money you could reach within a few days. Enter 0 if none. That&rsquo;s a very common starting point.</p>
           <div style={{ maxWidth: 240 }}>
             <MoneyInput id="savings" label="Savings" value={draft.savings} placeholder="0" onChange={(v) => update({ savings: v })} />
@@ -191,7 +229,7 @@ export function QuestionForm({ draft, setDraft, onSubmit, onBack, notice }) {
       </div>
 
       {error && (
-        <div className="callout warn" role="alert" style={{ marginBottom: 16 }}>
+        <div className="callout warn" style={{ marginBottom: 16 }}>
           <IconInfo />
           <span>{error}</span>
         </div>

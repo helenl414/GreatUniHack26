@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Steady — plan for income that doesn't arrive neatly</title>
     <meta name="description" content="Plan ahead, test your resilience, and show your reliability when your income is irregular. Education and planning support, not financial advice." />
-    <meta name="theme-color" content="#42145F" />
+    <meta name="theme-color" content="#FFFFFF" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -13,6 +13,19 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Steady" />
+    <script>
+      // Apply saved display preferences before first paint (see src/lib/preferences.jsx).
+      (function () {
+        var p = {};
+        try { p = JSON.parse(localStorage.getItem('steady.prefs.v1') || '{}'); } catch (e) {}
+        var m = function (q) { return window.matchMedia && window.matchMedia(q).matches; };
+        var d = document.documentElement;
+        d.dataset.theme = p.theme === 'light' || p.theme === 'dark' ? p.theme : m('(prefers-color-scheme: dark)') ? 'dark' : 'light';
+        d.dataset.contrast = p.highContrast || m('(prefers-contrast: more)') ? 'more' : 'standard';
+        d.dataset.motion = p.reduceMotion || m('(prefers-reduced-motion: reduce)') ? 'reduce' : 'full';
+        d.dataset.text = p.textSize || 'standard';
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

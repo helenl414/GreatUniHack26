@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react';
+import { usePreferences } from './preferences';
 
-// Recharts needs literal colours, so mirror the CSS tokens for light and dark.
+// Recharts needs literal colours, so mirror the CSS tokens for each theme.
+// Every series colour has at least 3:1 contrast against its background.
 const LIGHT = {
-  ink: '#1D1129', ink2: '#5B4E66', ink3: '#8A7F94', grid: '#E9E1F0',
-  bar: '#CDB8E3', barLow: '#F2C48F', steady: '#42145F', average: '#8A7F94',
-  without: '#C4122F', with: '#5E10B1', shock: '#FDF0E1', zero: '#1D1129',
+  ink: '#2A2433', ink2: '#57505F', ink3: '#6B6475', grid: '#EEEAF3',
+  bar: '#7491CF', barLow: '#EBC48A', barLowStroke: '#B07C2C', steady: '#5B3E96', average: '#8A8394',
+  without: '#C0606E', with: '#5B3E96', shock: '#F9ECEE', zero: '#57505F',
 };
 const DARK = {
-  ink: '#F3EEF8', ink2: '#BEB2CA', ink3: '#8E829A', grid: '#2E2239',
-  bar: '#5B3F7A', barLow: '#8A5A2A', steady: '#E7D7FB', average: '#8E829A',
-  without: '#FF7088', with: '#C3A3FF', shock: '#2E2116', zero: '#F3EEF8',
+  ink: '#ECE9F1', ink2: '#BDB6C8', ink3: '#9A93A6', grid: '#2C2833',
+  bar: '#6F87BF', barLow: '#D6A65F', barLowStroke: '#D6A65F', steady: '#8EC3DC', average: '#9A93A6',
+  without: '#E08F99', with: '#8EC3DC', shock: '#2E2228', zero: '#BDB6C8',
+};
+const MORE = {
+  light: { grid: '#9A9A9A', ink2: '#000000', ink3: '#000000', average: '#000000', bar: '#4A68AE' },
+  dark: { grid: '#6B6B73', ink2: '#FFFFFF', ink3: '#FFFFFF', average: '#FFFFFF' },
 };
 
-const mq = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-
 export function useChartTheme() {
-  const [dark, setDark] = useState(mq?.matches ?? false);
-  useEffect(() => {
-    if (!mq) return undefined;
-    const on = (e) => setDark(e.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, []);
-  return dark ? DARK : LIGHT;
+  const { resolved } = usePreferences();
+  const base = resolved.theme === 'dark' ? DARK : LIGHT;
+  return resolved.contrast === 'more' ? { ...base, ...MORE[resolved.theme] } : base;
 }

@@ -56,7 +56,7 @@ export function IncomeChart({ plan }) {
               }
             />
             <Bar dataKey="income" radius={[6, 6, 0, 0]} maxBarSize={56} isAnimationActive={false}>
-              {data.map((d) => <Cell key={d.month} fill={d.action === 'draw' ? c.barLow : c.bar} />)}
+              {data.map((d) => <Cell key={d.month} fill={d.action === 'draw' ? c.barLow : c.bar} stroke={d.action === 'draw' ? c.barLowStroke : 'none'} strokeWidth={1.5} />)}
             </Bar>
             <Line dataKey="average" stroke={c.average} strokeWidth={2} strokeDasharray="6 5" dot={false} isAnimationActive={false} />
             <Line dataKey="steadyPay" stroke={c.steady} strokeWidth={3.5} dot={false} isAnimationActive={false} />
@@ -65,7 +65,7 @@ export function IncomeChart({ plan }) {
       </div>
       <div className="legend" aria-hidden="true">
         <span><i className="swatch" style={{ background: c.bar }} /> Income, at or above steady pay</span>
-        <span><i className="swatch" style={{ background: c.barLow }} /> Below steady pay</span>
+        <span><i className="swatch" style={{ background: c.barLow, outline: `1.5px solid ${c.barLowStroke}`, outlineOffset: -1.5 }} /> Below steady pay</span>
         <span><i className="swatch line" style={{ background: c.steady }} /> Steady pay {gbp(plan.steadyPay)}</span>
         <span><i className="swatch dash" style={{ borderColor: c.average }} /> Average {gbp(plan.stats.mean)}</span>
       </div>

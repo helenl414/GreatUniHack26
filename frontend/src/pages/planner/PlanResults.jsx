@@ -2,6 +2,7 @@ import { IncomeChart } from '../../components/Charts';
 import { Explain } from '../../components/Explain';
 import { gbp, monthLabel, pct } from '../../lib/format';
 import { IconArrow } from '../../components/Icons';
+import { GLOSSARY, Term } from '../../components/Term';
 
 export function PlanResults({ plan, profile, onEdit }) {
   const figures = {
@@ -27,7 +28,7 @@ export function PlanResults({ plan, profile, onEdit }) {
     <div className="fade-in">
       <div className="hero-figure">
         <div className="lead">
-          <div className="figure-label">Safe to spend each week</div>
+          <div className="figure-label"><Term def={GLOSSARY.safeWeekly}>Safe to spend each week</Term></div>
           <div className="figure-value num">
             {gbp(plan.safeWeekly)}<small>/week</small>
           </div>
@@ -38,12 +39,12 @@ export function PlanResults({ plan, profile, onEdit }) {
           </div>
         </div>
         <div>
-          <div className="figure-label">Steady monthly pay</div>
+          <div className="figure-label"><Term def={GLOSSARY.steadyPay}>Steady monthly pay</Term></div>
           <div className="figure-value num">{gbp(plan.steadyPay)}</div>
           <div className="figure-note">{gbp(plan.overstatement)} below your {gbp(plan.stats.mean)} average</div>
         </div>
         <div>
-          <div className="figure-label">Buffer target</div>
+          <div className="figure-label"><Term def={GLOSSARY.buffer}>Buffer target</Term></div>
           <div className="figure-value num">{gbp(plan.bufferTarget)}</div>
           <div className="meter" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(plan.bufferProgress * 100)} aria-label="Buffer progress">
             <span style={{ width: pct(plan.bufferProgress) }} />

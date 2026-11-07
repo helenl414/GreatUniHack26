@@ -7,6 +7,7 @@ import { BalanceChart } from '../components/Charts';
 import { Explain } from '../components/Explain';
 import { SampleBanner } from '../components/SampleBanner';
 import { NeedsPlan } from '../components/NeedsPlan';
+import { GLOSSARY, Term } from '../components/Term';
 
 const HORIZON = 26;
 
@@ -22,7 +23,7 @@ function Outcome({ kind, title, result, horizon }) {
       <dl>
         <dt>Starting balance</dt><dd>{gbp(result.startBalance)}</dd>
         <dt>Lowest point</dt><dd>{gbp(result.lowest)}</dd>
-        <dt>Biggest shortfall</dt><dd>{result.shortfall ? gbp(result.shortfall) : 'None'}</dd>
+        <dt><Term def={GLOSSARY.shortfall}>Biggest shortfall</Term></dt><dd>{result.shortfall ? gbp(result.shortfall) : 'None'}</dd>
         <dt>Bill payments you couldn&rsquo;t cover</dt><dd>{result.billsHit.length}</dd>
       </dl>
     </div>
@@ -136,6 +137,28 @@ export default function Simulator() {
           </div>
         </div>
         <BalanceChart sim={sim} startWeek={startWeek} endWeek={endWeek} />
+        <details className="data-toggle">
+          <summary>Show the numbers as a table</summary>
+          <div style={{ overflowX: 'auto' }}>
+            <table className="data-table">
+              <caption className="sr-only">Projected balance each week, with and without the buffer</caption>
+              <thead>
+                <tr><th scope="col">Week</th><th scope="col">Starts</th><th scope="col">Income lost?</th><th scope="col">With buffer</th><th scope="col">Current savings only</th></tr>
+              </thead>
+              <tbody>
+                {sim.series.map((p) => (
+                  <tr key={p.week}>
+                    <th scope="row" style={{ textAlign: 'left', fontWeight: 600 }}>{p.week}</th>
+                    <td>{dateLabel(p.date)}</td>
+                    <td>{p.inShock ? 'Yes' : 'No'}</td>
+                    <td>{gbp(p.with)}</td>
+                    <td style={{ color: p.without < 0 ? 'var(--danger)' : undefined, fontWeight: p.without < 0 ? 650 : undefined }}>{gbp(p.without)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
       </section>
 
       <section className="panel" style={{ marginTop: 16 }}>

@@ -23,13 +23,13 @@ function MonthlyBars({ months, totals, average }) {
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Monthly income bar chart">
       {totals.map((t, i) => (
         <g key={months[i]}>
-          <rect x={pad.l + i * bw + bw * 0.18} y={y(t)} width={bw * 0.64} height={H - pad.b - y(t)} rx="4" fill="#CDB8E3" />
-          <text x={pad.l + i * bw + bw / 2} y={y(t) - 5} textAnchor="middle" fontSize="11" fill="#1D1129" fontWeight="600">{gbp(t)}</text>
-          <text x={pad.l + i * bw + bw / 2} y={H - 8} textAnchor="middle" fontSize="11" fill="#5B4E66">{monthLabel(months[i])}</text>
+          <rect x={pad.l + i * bw + bw * 0.18} y={y(t)} width={bw * 0.64} height={H - pad.b - y(t)} rx="4" fill="#7491CF" />
+          <text x={pad.l + i * bw + bw / 2} y={y(t) - 5} textAnchor="middle" fontSize="11" fill="#2A2433" fontWeight="600">{gbp(t)}</text>
+          <text x={pad.l + i * bw + bw / 2} y={H - 8} textAnchor="middle" fontSize="11" fill="#57505F">{monthLabel(months[i])}</text>
         </g>
       ))}
-      <line x1="0" x2={W} y1={y(average)} y2={y(average)} stroke="#42145F" strokeWidth="1.5" strokeDasharray="5 4" />
-      <line x1="0" x2={W} y1={H - pad.b} y2={H - pad.b} stroke="#CBBFD6" />
+      <line x1="0" x2={W} y1={y(average)} y2={y(average)} stroke="#5B3E96" strokeWidth="1.5" strokeDasharray="5 4" />
+      <line x1="0" x2={W} y1={H - pad.b} y2={H - pad.b} stroke="#B9B1C9" />
     </svg>
   );
 }
@@ -117,7 +117,7 @@ export default function Report() {
             <div>
               <span className="report-label">Self-reported summary</span>
               <h1>Income summary</h1>
-              <p style={{ color: '#5B4E66', marginTop: 4 }}>{period} · {report.monthCount} months</p>
+              <p style={{ color: '#57505F', marginTop: 4 }}>{period} · {report.monthCount} months</p>
             </div>
             <div className="report-meta">
               <strong>{displayName || 'Name not provided'}</strong>
@@ -152,7 +152,7 @@ export default function Report() {
 
           <h2>Income by month</h2>
           <MonthlyBars months={report.months} totals={report.totals} average={report.average} />
-          <p style={{ fontSize: '0.75rem', color: '#7E7389', marginTop: 4 }}>Dashed line: average month ({gbp(report.average)}).</p>
+          <p style={{ fontSize: '0.75rem', color: '#6B6475', marginTop: 4 }}>Dashed line: average month ({gbp(report.average)}).</p>
 
           <h2>Income by source</h2>
           <div style={{ overflowX: 'auto' }}>

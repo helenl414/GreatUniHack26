@@ -11,16 +11,29 @@ use it on a phone, some while stressed about money. Plain words, big numbers, no
 tracking; body 16px / 1.55. All money uses tabular numerals. The one big number per screen (safe weekly
 spend, run-out week) is the hierarchy anchor.
 
-**Colour.** NatWest-inspired purples.
-- Brand deep purple `#42145F`: top bar, hero, the lead figure tile.
-- Action purple `#5E10B1`: primary buttons, focus, active tab. Reserved for things you can press.
-- Canvas `#F7F4FA`, surfaces white, 1px lavender rules `#E3DAEB`.
-- Semantic only for status: green = set aside / safe, amber = draw from buffer / below steady pay,
-  red = shortfall / money runs out.
-- Dark mode is designed separately (deep aubergine surfaces, lifted lilac accent). The printable
-  report always stays paper-white.
+**Colour.** Calm, clean NatWest palette (muted purples, soft lavender, gentle accents), defined as
+tokens at the top of `frontend/src/styles.css`. Avoid saturated fills and pure black/white by default.
+- Light: white header with a hairline, soft lavender hero `#F3EFFA → #EBE4F6`, canvas `#F7F6FA`,
+  ink `#2A2433` (15:1), secondary text `#57505F` (7.7:1), muted purple action `#5B3E96` (8.2:1 with white).
+- Dark: soft charcoal-plum, not black: canvas `#17151C`, surfaces `#1C1922`, ink `#ECE9F1`,
+  calm sky action `#8EC3DC` (9:1 with dark text).
+- Status: teal `#2E6575` on `#E6F1F4` (set aside), amber `#7A5310` on `#FBF0DC` (draw),
+  rose `#9A3446` on `#F9E6E8` (shortfall). All text pairs meet WCAG AA.
+- Charts: soft blue `#7491CF` income, soft amber `#EBC48A` (outlined) below steady pay, purple steady line,
+  rose for "current savings only".
+- The opt-in High contrast setting is the only place pure black/white is used.
 
-**Geometry.** 14px radius panels, 10px inputs, pill buttons. 46px control height (touch-friendly).
+**Display settings** (top bar → Display, saved on device, applied before first paint):
+Auto/Light/Dark theme, three text sizes (100/112.5/125%), high contrast (black/white text, 2px
+borders, stronger focus), reduce motion. Auto values follow the OS (`prefers-color-scheme`,
+`prefers-contrast`, `prefers-reduced-motion`).
+
+**Accessibility & usability.** Skip link; focus moves to the page heading after navigation;
+44px touch targets; tap-to-open definitions for jargon (steady pay, buffer, shortfall); chart data
+available as a table; form progress chips and inline errors linked with `aria-describedby`; number
+fields ignore the scroll wheel; read-aloud for explanations; "Delete my data" with confirmation.
+
+**Geometry.** 14px radius panels, 10px inputs, pill buttons. 48px control height (touch-friendly).
 1px borders, almost no shadow. Content width 1080px.
 
 **Layout.** Desktop: purple top bar with three numbered tabs. Phone (<760px): bottom tab bar, single

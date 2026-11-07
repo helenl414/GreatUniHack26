@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { useHashRoute } from './lib/useHashRoute';
 import { BottomNav, FooterNote, TopBar } from './components/AppShell';
 import Landing from './pages/Landing';
@@ -17,9 +17,25 @@ const TITLES = {
 
 export default function App() {
   const route = useHashRoute();
+  const firstRender = useRef(true);
 
   useEffect(() => {
     document.title = TITLES[route];
+    // After in-app navigation, move focus to the new page's heading so keyboard and
+    // screen-reader users land at the top of the new content (pages may still be loading).
+    if (firstRender.current) {
+      firstRender.current = false;
+      return undefined;
+    }
+    let tries = 0;
+    let frame;
+    const focusTitle = () => {
+      const target = document.querySelector('[data-page-title]') || document.getElementById('main');
+      if (target && (target.id !== 'main' || tries > 20)) target.focus({ preventScroll: true });
+      else if (tries++ < 30) frame = requestAnimationFrame(focusTitle);
+    };
+    frame = requestAnimationFrame(focusTitle);
+    return () => cancelAnimationFrame(frame);
   }, [route]);
 
   return (

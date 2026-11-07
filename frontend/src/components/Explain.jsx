@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { explain, usingRealAI } from '../lib/api';
-import { IconSpark } from './Icons';
+import { IconSpark, IconSpeaker, IconStop } from './Icons';
+
+const canSpeak = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
 /**
  * AI explanation panel. Receives figures that lib/engine.js already calculated;
@@ -10,6 +12,28 @@ export function Explain({ kind, figures, title = 'What this means for you' }) {
   const [state, setState] = useState({ status: 'idle' });
   const key = JSON.stringify(figures);
   const lastKey = useRef(null);
+  const [speaking, setSpeaking] = useState(false);
+
+  useEffect(() => () => canSpeak && window.speechSynthesis.cancel(), []);
+
+  // Read the explanation aloud (helps people who find reading long text hard).
+  const toggleSpeak = () => {
+    const synth = window.speechSynthesis;
+    if (speaking) {
+      synth.cancel();
+      setSpeaking(false);
+      return;
+    }
+    const text = [state.summary, 'What the numbers mean.', ...state.meaning, 'Three next steps.', ...state.steps.slice(0, 3).map((s, i) => `${i + 1}. ${s}`)].join(' ');
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    u.rate = 0.95;
+    u.onend = () => setSpeaking(false);
+    u.onerror = () => setSpeaking(false);
+    synth.cancel();
+    synth.speak(u);
+    setSpeaking(true);
+  };
 
   const run = async () => {
     lastKey.current = key;
@@ -43,7 +67,14 @@ export function Explain({ kind, figures, title = 'What this means for you' }) {
           </button>
         )}
         {state.status === 'done' && (
-          <button className="btn btn-ghost btn-small" onClick={run}>Refresh</button>
+          <div className="row" style={{ gap: 4 }}>
+            {canSpeak && (
+              <button className="btn btn-secondary btn-small" onClick={toggleSpeak} aria-pressed={speaking}>
+                {speaking ? <IconStop /> : <IconSpeaker />} {speaking ? 'Stop reading' : 'Read aloud'}
+              </button>
+            )}
+            <button className="btn btn-ghost btn-small" onClick={run}>Refresh</button>
+          </div>
         )}
       </div>
 

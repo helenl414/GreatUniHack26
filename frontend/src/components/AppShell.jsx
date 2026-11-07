@@ -1,4 +1,5 @@
 import { IconPlan, IconReport, IconSim, SteadyMark } from './Icons';
+import { DisplaySettings } from './DisplaySettings';
 
 const TABS = [
   { id: 'plan', label: 'Planner', long: 'Smoothing planner', Icon: IconPlan },
@@ -14,23 +15,23 @@ export function TopBar({ route }) {
           <SteadyMark />
           Steady
         </a>
-        {route !== 'home' && (
-          <nav className="tabs" aria-label="Tools">
-            {TABS.map((t, i) => (
-              <a key={t.id} className="tab" href={`#/${t.id}`} aria-current={route === t.id ? 'page' : undefined}>
-                <span className="tab-num" aria-hidden="true">{i + 1}</span>
-                {t.long}
-              </a>
-            ))}
-          </nav>
-        )}
+        <nav className="tabs" aria-label="Tools">
+          {TABS.map((t, i) => (
+            <a key={t.id} className="tab" href={`#/${t.id}`} aria-current={route === t.id ? 'page' : undefined}>
+              <span className="tab-num" aria-hidden="true">{i + 1}</span>
+              {t.long}
+            </a>
+          ))}
+        </nav>
+        <div className="topbar-actions">
+          <DisplaySettings />
+        </div>
       </div>
     </header>
   );
 }
 
 export function BottomNav({ route }) {
-  if (route === 'home') return null;
   return (
     <nav className="bottom-nav" aria-label="Tools">
       {TABS.map(({ id, label, Icon }) => (
@@ -59,7 +60,8 @@ export function PageHead({ step, title, children }) {
   return (
     <div className="page-head">
       {step && <div className="eyebrow">{step}</div>}
-      <h1 style={{ marginTop: step ? 6 : 0 }}>{title}</h1>
+      {/* tabIndex lets App move focus here after navigation, so screen readers announce the new page. */}
+      <h1 tabIndex={-1} data-page-title style={{ marginTop: step ? 6 : 0, outline: 'none' }}>{title}</h1>
       {children && <p>{children}</p>}
     </div>
   );

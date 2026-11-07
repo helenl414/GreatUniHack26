@@ -18,28 +18,26 @@ function HeroArt() {
         @keyframes ha-fade { to { opacity: 1; } }
         @media (prefers-reduced-motion: reduce) { .ha-line { stroke-dashoffset: 0; } .ha-label { opacity: 1; } }
       `}</style>
-      <line x1="10" x2="424" y1={base} y2={base} stroke="#fff" strokeOpacity="0.25" />
+      <line x1="10" x2="424" y1={base} y2={base} style={{ stroke: 'var(--hero-line)' }} />
       {bars.map((h, i) => (
         <rect
           key={i}
           className="ha-bar"
-          style={{ animationDelay: `${i * 50}ms` }}
           x={18 + i * 51}
           y={base - h}
           width="34"
           height={h}
           rx="5"
-          fill={h < 70 ? '#F2C48F' : '#8A5CB8'}
-          fillOpacity={h < 70 ? 0.9 : 0.75}
+          style={{ animationDelay: `${i * 50}ms`, fill: h < 70 ? 'var(--p-amber-soft)' : 'var(--hero-bar)' }}
         />
       ))}
-      <line x1="10" x2="424" y1={base - 107} y2={base - 107} stroke="#fff" strokeOpacity="0.5" strokeDasharray="4 6" />
-      <path className="ha-line" d="M12 162 C 110 156, 200 168, 300 160 S 400 158, 424 160" stroke="#fff" strokeWidth="5" fill="none" strokeLinecap="round" />
+      <line x1="10" x2="424" y1={base - 107} y2={base - 107} style={{ stroke: 'var(--ink-3)' }} strokeDasharray="4 6" />
+      <path className="ha-line" d="M12 162 C 110 156, 200 168, 300 160 S 400 158, 424 160" style={{ stroke: 'var(--action)' }} strokeWidth="5" fill="none" strokeLinecap="round" />
       <g className="ha-label" fontFamily="inherit" fontSize="17">
-        <text x="440" y={base - 111} fill="#fff" fillOpacity="0.75" fontWeight="600">Average</text>
-        <text x="440" y={base - 90} fill="#fff" fillOpacity="0.6">looks safe</text>
-        <text x="440" y="157" fill="#fff" fontWeight="700">Steady pay</text>
-        <text x="440" y="179" fill="#fff" fillOpacity="0.85">actually safe</text>
+        <text x="440" y={base - 111} style={{ fill: 'var(--ink-2)' }} fontWeight="600">Average</text>
+        <text x="440" y={base - 90} style={{ fill: 'var(--ink-3)' }}>looks safe</text>
+        <text x="440" y="157" style={{ fill: 'var(--action)' }} fontWeight="700">Steady pay</text>
+        <text x="440" y="179" style={{ fill: 'var(--ink-2)' }}>actually safe</text>
       </g>
     </svg>
   );
@@ -91,7 +89,7 @@ export default function Landing() {
         <div className="wrap hero-inner">
           <div>
             <div className="eyebrow">For income that doesn't arrive neatly</div>
-            <h1>Plan on your steady pay, not your best month.</h1>
+            <h1 tabIndex={-1} data-page-title style={{ outline: 'none' }}>Plan on your steady pay, not your best month.</h1>
             <p className="lede">
               Steady helps seasonal, part-time and short-term workers, and anyone who changes jobs
               often, plan ahead, test how resilient they are, and show the reliability they have earned.
