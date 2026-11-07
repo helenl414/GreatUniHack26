@@ -1,0 +1,4 @@
+# Optional. Copy to .dev.vars for local development; never commit actual keys.
+OPENAI_API_KEY=
+# Select a model that supports Responses API strict structured outputs.
+OPENAI_MODEL=
