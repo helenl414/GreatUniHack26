@@ -1,4 +1,4 @@
-# Steady
+# Sothis
 
 A demo-first irregular income planning app with exactly four main tabs: Home, Income Planner, Simulator, and Prove My Income. Built with React and the Next.js App Router API through Vinext, Tailwind CSS, Zod and jsPDF. No account or bank connection is required inside the app. The hosted Site uses the owner's existing private Sites access policy.
 
@@ -75,3 +75,7 @@ Defaults are flagged in canonical records, review, planner results and simulator
 Simulator now offers either an income interruption or an additional one-off activity. Activity name, amount, date and confirmation that it is not already in the budget are required. Dates outside the horizon are rejected and the view can extend to 52 weeks. The activity is charged once after that day's bills and living costs, before additional flexible spending. Ordinary forecast excludes the activity; both savings comparisons include the same activity and unchanged income/spending. Historical records and report facts never change.
 
 Each simulation ends with deterministic plain-language guidance: a comparison, first gap/bill impact, uncertainty and exactly three next steps. Every amount/date comes from the current result revision; stale guidance is rejected. This works without AI credentials. Additional tests cover optional defaults, category exclusions, currency handling, zero overrides, activity conservation and date validation, ordinary/scenario comparisons, reconciliation, existing gaps, and stale guidance.
+
+## Homepage update
+
+Home begins with the confirmed plan's current weekly spending estimate. A first-time user sees a Start your journey link to Income Planner instead of fictional numbers. Confirmed plans with insufficient history get a completion prompt, not a zero. The box includes the analysis period, active currency, demo flag, default assumptions and structural-gap warning when relevant. The same canonical calculation result is used as in the planner. The page then presents the supplied What is Sothis? introduction, links to the three other tabs, and the complete How to safely utilise Sothis? content. Visible branding and report branding now use Sothis; existing browser storage keys and hosted URL are retained for continuity.
